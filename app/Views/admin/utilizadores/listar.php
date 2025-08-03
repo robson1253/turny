@@ -5,11 +5,13 @@
     <title>Utilizadores da Empresa - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
+        /* Estilos da tabela e ações */
         .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; vertical-align: middle; }
         .table th { background-color: #f2f2f2; }
         .table tr:nth-child(even){ background-color: #f9f9f9; }
-        .actions a, .actions button { display: inline-block; margin-right: 10px; font-weight: bold; margin-bottom: 5px; }
+        .actions .btn { display: inline-block; margin-right: 5px; margin-bottom: 5px; text-decoration: none; }
+        .actions form { margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -17,7 +19,10 @@
         <h1>Utilizadores da Empresa: <?= htmlspecialchars($companyName ?? 'Empresa') ?></h1>
         <p><a href="/admin/empresas">&larr; Voltar para a Lista de Empresas</a></p>
         
-        <?php display_flash_message(); ?>
+        <?php 
+        // Exibe mensagens de sucesso ou erro vindas do controller
+        display_flash_message(); 
+        ?>
         
         <table class="table">
             <thead>
@@ -48,8 +53,7 @@
                             <td class="actions">
                                 <a href="/admin/utilizadores/editar?id=<?= $user['id'] ?>" class="btn edit-btn">Editar</a>
                                 
-                                <!-- Ação de toggle status agora é um formulário POST seguro -->
-                                <form action="/admin/utilizadores/toggle-status" method="POST" style="display:inline;" onsubmit="return confirm('Tem a certeza?')">
+                                <form action="/admin/utilizadores/toggle-status" method="POST" style="display:inline;" onsubmit="return confirm('Tem a certeza que deseja alterar o status deste utilizador?')">
                                     <?php csrf_field(); ?>
                                     <input type="hidden" name="id" value="<?= $user['id'] ?>">
                                     <button type="submit" class="btn <?= $user['status'] ? 'cancel-btn' : 'success-btn' ?>">

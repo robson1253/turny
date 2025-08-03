@@ -1,17 +1,100 @@
-<?php
-if (!isset($_SESSION['operator_id'])) {
-    header('Location: /login'); exit();
-}
-if (!isset($offers)) $offers = [];
-if (!isset($pendingOffers)) $pendingOffers = 0;
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ofertas de Vaga - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+/* Container dos botões no rodapé da vaga */
+.vaga-card-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Cada form dentro do rodapé ocupa espaço igual */
+.vaga-card-footer form {
+    flex: 1;
+    display: flex;
+}
+
+/* Botões ocupam toda a largura do form pai */
+.vaga-card-footer button {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: #fff;
+    user-select: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Botão para recusar (vermelho) */
+.cancel-btn {
+    background-color: #d9534f;
+}
+
+.cancel-btn:hover,
+.cancel-btn:focus {
+    background-color: #c9302c;
+}
+
+/* Botão para aceitar (verde) */
+.success-btn {
+    background-color: #5cb85c;
+}
+
+.success-btn:hover,
+.success-btn:focus {
+    background-color: #4cae4c;
+}
+
+/* Opcional: estilos para o card de vaga para melhor visual */
+.vaga-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.vaga-card-header h3 {
+    margin: 0 0 5px 0;
+    color: var(--cor-destaque);
+}
+
+.vaga-card-detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.vaga-card-detail svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--cor-primaria);
+}
+
+/* Informação extra, ex: "Oferecido por" */
+.info-box {
+    background-color: #f0f7fa;
+    border: 1px solid #cce0f1;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    margin-top: 15px;
+    text-align: center;
+}
+    </style>
 </head>
 <body class="operador-body">
     <div class="operador-container">
@@ -21,6 +104,8 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
         </header>
 
         <main class="operador-content">
+            <?php display_flash_message(); ?>
+
             <h2 style="color: var(--cor-destaque); margin-top: 0;">Ofertas de Vaga Recebidas</h2>
             <p style="margin-top: -10px; margin-bottom: 30px;">Outros operadores ofereceram-lhe os turnos deles. Aceite para adicionar à sua agenda.</p>
             
@@ -55,14 +140,27 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
                                 </div>
                             </div>
                             <div class="vaga-card-footer">
-                                <a href="/painel/operador/ofertas/responder?transfer_id=<?= $vaga['transfer_id'] ?>&response=recusada" class="cancel-btn" onclick="return confirm('Tem a certeza que quer RECUSAR esta oferta?');">Recusar</a>
-                                <a href="/painel/operador/ofertas/responder?transfer_id=<?= $vaga['transfer_id'] ?>&response=aceite" class="edit-btn" style="background-color: var(--cor-sucesso);" onclick="return confirm('Tem a certeza que quer ACEITAR esta oferta? Verifique se não tem conflitos de horário.');">Aceitar Oferta</a>
+                                <!-- Formulário seguro para Recusar -->
+                                <form action="/painel/operador/ofertas/responder" method="POST" onsubmit="return confirm('Tem a certeza que quer RECUSAR esta oferta?');">
+                                    <?php csrf_field(); ?>
+                                    <input type="hidden" name="transfer_id" value="<?= $vaga['transfer_id'] ?>">
+                                    <input type="hidden" name="response" value="recusada">
+                                    <button type="submit" class="btn cancel-btn">Recusar</button>
+                                </form>
+                                <!-- Formulário seguro para Aceitar -->
+                                <form action="/painel/operador/ofertas/responder" method="POST" onsubmit="return confirm('Tem a certeza que quer ACEITAR esta oferta? Verifique se não tem conflitos de horário.');">
+                                    <?php csrf_field(); ?>
+                                    <input type="hidden" name="transfer_id" value="<?= $vaga['transfer_id'] ?>">
+                                    <input type="hidden" name="response" value="aceite">
+                                    <button type="submit" class="btn success-btn">Aceitar Oferta</button>
+                                </form>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
         </main>
+        
         <footer class="operador-footer">
             <a href="/painel/operador" class="footer-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
@@ -74,8 +172,8 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
             </a>
             <a href="/painel/operador/ofertas" class="footer-icon active" style="position: relative;">
                  <?php if (isset($pendingOffers) && $pendingOffers > 0): ?>
-                    <span class="notification-badge"><?= $pendingOffers ?></span>
-                <?php endif; ?>
+                     <span class="notification-badge"><?= $pendingOffers ?></span>
+                 <?php endif; ?>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 17H20V12H4V17H2V12C2 10.9 2.9 10 4 10H20C21.1 10 22 10.9 22 12V17M15.5 2H8.5L7.3 5H16.7L15.5 2M18 5H6L5 7V9H19V7L18 5M12 13C13.1 13 14 13.9 14 15S13.1 17 12 17 10 16.1 10 15 10.9 13 12 13Z" /></svg>
                 Ofertas
             </a>
@@ -85,8 +183,5 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
             </a>
         </footer>
     </div>
-	
-
-	
 </body>
 </html>

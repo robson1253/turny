@@ -1,7 +1,12 @@
 <?php
-require_once __DIR__ . '/../../Database/Connection.php';
 
-class ErpSystemController
+namespace App\Http\Controllers;
+
+use App\Database\Connection;
+use PDOException;
+use Exception;
+
+class ErpSystemController extends BaseController
 {
     /**
      * Mostra a lista de todos os sistemas ERP.
@@ -9,15 +14,17 @@ class ErpSystemController
     public function index()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
         try {
             $pdo = Connection::getPdo();
             $stmt = $pdo->query('SELECT * FROM erp_systems ORDER BY name ASC');
             $erpSystems = $stmt->fetchAll();
-            require_once __DIR__ . '/../../Views/admin/erps/listar.php';
-        } catch (\PDOException $e) {
-            die('Erro ao buscar os sistemas ERP: ' . $e->getMessage());
+
+            $this->view('admin/erps/listar', ['erpSystems' => $erpSystems]);
+
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 
@@ -27,9 +34,9 @@ class ErpSystemController
     public function showCreateForm()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
-        require_once __DIR__ . '/../../Views/admin/erps/criar.php';
+        $this->view('admin/erps/criar');
     }
 
     /**
@@ -38,96 +45,121 @@ class ErpSystemController
     public function store()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
-        $name = $_POST['name'] ?? '';
+        verify_csrf_token();
+        $name = trim($_POST['name'] ?? '');
+
         if (empty($name)) {
-            die('O nome do sistema é obrigatório.');
+            flash('O nome do sistema é obrigatório.', 'error');
+            header('Location: /admin/erps/criar');
+            exit();
         }
         try {
             $pdo = Connection::getPdo();
             $sql = "INSERT INTO erp_systems (name) VALUES (?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$name]);
+
+            flash('Sistema ERP criado com sucesso!');
             header('Location: /admin/erps');
             exit();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             if ($e->errorInfo[1] == 1062) {
-                die('Erro: Já existe um sistema com este nome.');
+                throw new Exception('Já existe um sistema com este nome.');
             }
-            die('Erro ao guardar o sistema ERP: ' . $e->getMessage());
+            throw $e;
         }
     }
 
     /**
-     * Mostra o formulário de edição para um sistema ERP. (NOVA FUNÇÃO)
+     * Mostra o formulário de edição para um sistema ERP.
      */
     public function edit()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
         $id = $_GET['id'] ?? null;
-        if (!$id) die('ID do sistema não fornecido.');
+        if (!$id) {
+            throw new Exception('ID do sistema não fornecido.');
+        }
         try {
             $pdo = Connection::getPdo();
             $stmt = $pdo->prepare("SELECT * FROM erp_systems WHERE id = ?");
             $stmt->execute([$id]);
             $erpSystem = $stmt->fetch();
-            if (!$erpSystem) die('Sistema ERP não encontrado.');
-            require_once __DIR__ . '/../../Views/admin/erps/editar.php';
-        } catch (\PDOException $e) {
-            die('Erro ao buscar o sistema ERP: ' . $e->getMessage());
+            if (!$erpSystem) {
+                throw new Exception('Sistema ERP não encontrado.');
+            }
+            $this->view('admin/erps/editar', ['erpSystem' => $erpSystem]);
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 
     /**
-     * Atualiza um sistema ERP na base de dados. (NOVA FUNÇÃO)
+     * Atualiza um sistema ERP na base de dados.
      */
     public function update()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
+        verify_csrf_token();
         $id = $_POST['id'] ?? null;
-        $name = $_POST['name'] ?? '';
+        $name = trim($_POST['name'] ?? '');
+
         if (!$id || empty($name)) {
-            die('ID e nome são obrigatórios.');
+            flash('ID e nome são obrigatórios.', 'error');
+            header('Location: /admin/erps/editar?id=' . $id);
+            exit();
         }
         try {
             $pdo = Connection::getPdo();
             $sql = "UPDATE erp_systems SET name = ? WHERE id = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$name, $id]);
+            
+            flash('Sistema ERP atualizado com sucesso!');
             header('Location: /admin/erps');
             exit();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             if ($e->errorInfo[1] == 1062) {
-                die('Erro: Já existe um sistema com este nome.');
+                throw new Exception('Já existe um sistema com este nome.');
             }
-            die('Erro ao atualizar o sistema ERP: ' . $e->getMessage());
+            throw $e;
         }
     }
 
     /**
-     * Apaga um sistema ERP da base de dados. (NOVA FUNÇÃO)
+     * Apaga um sistema ERP da base de dados.
      */
     public function destroy()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
-        $id = $_GET['id'] ?? null;
-        if (!$id) die('ID do sistema não fornecido.');
+        verify_csrf_token();
+        $id = $_POST['id'] ?? null; // Alterado para POST
+
+        if (!$id) {
+            throw new Exception('ID do sistema não fornecido.');
+        }
         try {
             $pdo = Connection::getPdo();
             $sql = "DELETE FROM erp_systems WHERE id = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
+
+            flash('Sistema ERP apagado com sucesso!', 'success');
             header('Location: /admin/erps');
             exit();
-        } catch (\PDOException $e) {
-            die('Erro ao apagar o sistema ERP: ' . $e->getMessage());
+        } catch (PDOException $e) {
+            // Se houver uma restrição de chave estrangeira, a exclusão falhará.
+            flash('Não foi possível apagar este sistema. Ele pode estar a ser utilizado por uma ou mais lojas.', 'error');
+            header('Location: /admin/erps');
+            exit();
         }
     }
 }

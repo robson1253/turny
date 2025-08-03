@@ -1,8 +1,13 @@
 <?php
+// 1. ADICIONA O "ENDEREÇO" CORRETO PARA ESTA CLASSE
+namespace App\Database;
+
+// 2. IMPORTA AS CLASSES GLOBAIS DO PHP PARA DENTRO DESTE NAMESPACE
+use PDO;
+use PDOException;
 
 // Ficheiro: app/Database/Connection.php
 // Responsável por criar e retornar uma conexão com a base de dados.
-
 class Connection
 {
     private static $pdo;
@@ -10,14 +15,14 @@ class Connection
     public static function getPdo()
     {
         if (!isset(self::$pdo)) {
-            // 1. Carrega as configurações do nosso ficheiro config/database.php
+            // Carrega as configurações do nosso ficheiro config/database.php
             $config = require __DIR__ . '/../../config/database.php';
 
-            // 2. Monta a "string de conexão" (DSN)
+            // Monta a "string de conexão" (DSN)
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['dbname']};charset={$config['charset']}";
 
             try {
-                // 3. Tenta criar a conexão PDO
+                // Tenta criar a conexão PDO
                 self::$pdo = new PDO($dsn, $config['user'], $config['password'], [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
@@ -28,7 +33,7 @@ class Connection
             }
         }
 
-        // 4. Retorna a conexão estabelecida
+        // Retorna a conexão estabelecida
         return self::$pdo;
     }
 }

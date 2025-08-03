@@ -1,53 +1,3 @@
-<?php
-if (!isset($_SESSION['operator_id'])) {
-    header('Location: /login'); exit();
-}
-if (!isset($myShifts)) {
-    $myShifts = [];
-}
-if (!isset($pendingOffers)) {
-    $pendingOffers = 0;
-}
-if (!isset($ratedApplicationIds)) {
-    $ratedApplicationIds = [];
-}
-
-// Lógica para processar as mensagens de status da URL
-$successMessage = '';
-$errorMessage = '';
-if (isset($_GET['status'])) {
-    switch ($_GET['status']) {
-        case 'cancel_success':
-            $successMessage = 'Turno cancelado com sucesso! A vaga foi reaberta.';
-            break;
-        case 'transfer_initiated':
-            $successMessage = 'Oferta de transferência enviada! O outro operador será notificado.';
-            break;
-        case 'transfer_success':
-            $successMessage = 'Vaga transferida com sucesso!';
-            break;
-        case 'rating_success':
-            $successMessage = 'Avaliação enviada com sucesso. Obrigado!';
-            break;
-        case 'cancel_failed':
-            $errorMessage = 'Não foi possível cancelar. O turno começa em menos de 12 horas.';
-            break;
-        case 'transfer_failed_time':
-            $errorMessage = 'Não foi possível transferir. O turno começa em menos de 2 horas.';
-            break;
-        case 'transfer_invalid_user':
-            $errorMessage = 'Transferência falhou: O @username inserido não foi encontrado ou não está ativo.';
-            break;
-        case 'transfer_not_qualified':
-            $errorMessage = 'Transferência falhou: O operador de destino não tem a qualificação necessária para esta loja.';
-            break;
-        case 'transfer_conflict_shift':
-        case 'transfer_conflict_training':
-            $errorMessage = 'Transferência falhou: O operador de destino já tem um compromisso que conflita com este horário.';
-            break;
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -56,10 +6,19 @@ if (isset($_GET['status'])) {
     <title>Meus Turnos - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        .error-message { background-color: #fce4e4; color: #c62828; border: 1px solid var(--cor-perigo); border-radius: 8px; padding: 15px; margin-bottom: 20px; font-weight: bold; }
         .btn-transfer { flex: 1; padding: 10px; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; background-color: #0d6efd; color: var(--cor-branco); transition: all 0.2s; font-size: 14px; }
-        .vaga-card-footer .cancel-btn { font-size: 14px; }
+        .vaga-card-footer form { flex: 1; display: flex; }
+        .vaga-card-footer .cancel-btn { font-size: 14px; width: 100%; color: #ffffff; background-color: #B22222; }
         .vaga-card-footer .cancel-btn.disabled { background-color: #ccc; cursor: not-allowed; opacity: 0.7; }
+
+        /* --- ESTRUTURA DE MODAL CORRIGIDA E DEFINITIVA --- */
+        .modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-dialog { background: #fff; padding: 25px; border-radius: 10px; width: 100%; max-width: 400px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); animation: fadeInModal 0.3s ease-out; position: relative; }
+        @keyframes fadeInModal { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .modal-header h2 { margin: 0; font-size: 1.5em; }
+        .modal-close-btn { position: absolute; top: 10px; right: 15px; background: transparent; border: none; font-size: 28px; cursor: pointer; color: #aaa; line-height: 1; }
+        .modal-close-btn:hover { color: #333; }
     </style>
 </head>
 <body class="operador-body">
@@ -70,12 +29,8 @@ if (isset($_GET['status'])) {
         </header>
 
         <main class="operador-content">
-            <?php if ($successMessage): ?>
-                <div class="success-message"><?= htmlspecialchars($successMessage) ?></div>
-            <?php endif; ?>
-            <?php if ($errorMessage): ?>
-                <div class="error-message"><?= htmlspecialchars($errorMessage) ?></div>
-            <?php endif; ?>
+            
+            <?php display_flash_message(); ?>
 
             <h2 style="color: var(--cor-destaque); margin-top: 0;">Meus Turnos</h2>
             <p style="margin-top: -10px; margin-bottom: 30px;">Acompanhe os seus compromissos e o histórico de turnos.</p>
@@ -112,9 +67,9 @@ if (isset($_GET['status'])) {
                                 <div class="vaga-card-body" style="background-color: #f8f9fa; border-top: 1px solid var(--cor-borda);">
                                     <h4 style="margin-top:0; color: var(--cor-destaque);">Resumo Financeiro</h4>
                                     <p style="margin: 5px 0;"><strong>Pagamento Base:</strong> R$ <?= htmlspecialchars(number_format($vaga['operator_payment'], 2, ',', '.')) ?></p>
-                                    <p style="margin: 5px 0; color: var(--cor-perigo);"><strong>Quebra de Caixa:</strong> - R$ <?= htmlspecialchars(number_format($vaga['cash_discrepancy'], 2, ',', '.')) ?></p>
+                                    <p style="margin: 5px 0; color: var(--cor-perigo);"><strong>Quebra de Caixa:</strong> - R$ <?= htmlspecialchars(number_format($vaga['cash_discrepancy'] ?? 0, 2, ',', '.')) ?></p>
                                     <hr style="border: 0; border-top: 1px solid #ddd; margin: 10px 0;">
-                                    <p style="font-weight: bold; font-size: 1.1em; margin: 5px 0;">PAGAMENTO FINAL: R$ <?= htmlspecialchars(number_format($vaga['final_operator_payment'], 2, ',', '.')) ?></p>
+                                    <p style="font-weight: bold; font-size: 1.1em; margin: 5px 0;">PAGAMENTO FINAL: R$ <?= htmlspecialchars(number_format($vaga['final_operator_payment'] ?? $vaga['operator_payment'], 2, ',', '.')) ?></p>
                                 </div>
                             <?php endif; ?>
 
@@ -123,22 +78,26 @@ if (isset($_GET['status'])) {
                                     <?php
                                         $now = new DateTime("now", new DateTimeZone('America/Sao_Paulo'));
                                         $shiftStart = new DateTime($vaga['shift_date'] . ' ' . $vaga['start_time'], new DateTimeZone('America/Sao_Paulo'));
-                                        $interval = $now->diff($shiftStart);
-                                        $hoursDifference = ($interval->days * 24) + $interval->h + ($interval->i / 60);
-                                        $canCancel = ($now < $shiftStart && $hoursDifference >= 12);
-                                        $canTransfer = ($now < $shiftStart && $hoursDifference >= 2);
+                                        $canCancel = ($now < $shiftStart && ($shiftStart->getTimestamp() - $now->getTimestamp()) >= (12 * 3600));
+                                        $canTransfer = ($now < $shiftStart && ($shiftStart->getTimestamp() - $now->getTimestamp()) >= (2 * 3600));
                                     ?>
-                                    <?php if ($canTransfer && $vaga['transferred_in'] == 0): ?>
-                                        <button type="button" class="btn-transfer" data-application-id="<?= $vaga['application_id'] ?>">Transferir</button>
+                                    <?php if ($canTransfer && empty($vaga['transferred_in'])): ?>
+                                        <button type="button" class="btn-transfer open-transfer-modal" data-application-id="<?= $vaga['application_id'] ?>">Transferir</button>
                                     <?php endif; ?>
+                                    
                                     <?php if ($canCancel): ?>
-                                        <a href="/painel/operador/meus-turnos/cancelar?application_id=<?= $vaga['application_id'] ?>" class="cancel-btn" onclick="return confirm('Tem a certeza que deseja cancelar a sua participação neste turno?');">Cancelar</a>
+                                        <form action="/painel/operador/meus-turnos/cancelar" method="POST" onsubmit="return confirm('Tem a certeza que deseja cancelar a sua participação neste turno?');">
+                                            <?php csrf_field(); ?>
+                                            <input type="hidden" name="application_id" value="<?= $vaga['application_id'] ?>">
+                                            <button type="submit" class="btn cancel-btn">Cancelar</button>
+                                        </form>
                                     <?php else: ?>
-                                        <a href="#" class="cancel-btn disabled" onclick="alert('Não é possível cancelar ou transferir este turno por falta de antecedência.'); return false;">Ações Indisponíveis</a>
+                                        <button class="btn cancel-btn disabled" title="Não é possível cancelar ou transferir este turno por falta de antecedência." disabled>Ações Indisponíveis</button>
                                     <?php endif; ?>
+
                                 <?php elseif ($vaga['application_status'] === 'concluido'): ?>
                                     <?php if (in_array($vaga['application_id'], $ratedApplicationIds)): ?>
-                                        <button type="button" class="btn-request disabled" style="flex-grow: 2;" disabled>Avaliação Enviada</button>
+                                        <button type="button" class="btn disabled" style="flex-grow: 2;" disabled>Avaliação Enviada</button>
                                     <?php else: ?>
                                         <a href="/painel/operador/avaliar?application_id=<?= $vaga['application_id'] ?>" class="btn" style="background-color: var(--cor-destaque); flex-grow: 2;">Avaliar Empresa</a>
                                     <?php endif; ?>
@@ -150,8 +109,10 @@ if (isset($_GET['status'])) {
             </div>
         </main>
 
+        <!-- === INÍCIO DO CÓDIGO DO RODAPÉ RESTAURADO === -->
         <footer class="operador-footer">
-            <a href="/painel/operador" class="footer-icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            <a href="/painel/operador" class="footer-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
                 Vagas
             </a>
             <a href="/painel/operador/meus-turnos" class="footer-icon active">
@@ -170,46 +131,47 @@ if (isset($_GET['status'])) {
                 Perfil
             </a>
         </footer>
+        <!-- === FIM DO CÓDIGO DO RODAPÉ RESTAURADO === -->
     </div>
     
-    <div class="modal-overlay" id="transfer-modal-overlay"></div>
-    <div class="modal-content" id="transfer-modal-content" style="max-width: 400px;"></div>
-    
+    <!-- Modal de Transferência -->
+    <div id="transfer-modal-container" class="modal-container">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2>Transferir Vaga</h2>
+                <button type="button" class="modal-close-btn" id="close-transfer-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form action="/painel/operador/meus-turnos/transferir" method="POST" id="transfer-form">
+                    <?php csrf_field(); ?>
+                    <input type="hidden" name="application_id" id="transfer_application_id">
+                    <div class="form-group">
+                        <label for="username">@Username do Operador de Destino</label>
+                        <input type="text" id="username" name="username" required placeholder="ex: joao_silva">
+                    </div>
+                    <div class="form-group" style="margin-top: 20px;">
+                        <button type="submit">Confirmar Transferência</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const body = document.body;
-            body.classList.remove('modal-open');
-
-            const transferModalOverlay = document.getElementById('transfer-modal-overlay');
-            const transferModalContent = document.getElementById('transfer-modal-content');
-            const openTransferBtns = document.querySelectorAll('.btn-transfer');
+    document.addEventListener('DOMContentLoaded', function() {
+        const transferModalContainer = document.getElementById('transfer-modal-container');
+        if (transferModalContainer) {
+            const openTransferBtns = document.querySelectorAll('.open-transfer-modal');
+            const closeTransferBtn = document.getElementById('close-transfer-modal');
+            const transferApplicationIdInput = document.getElementById('transfer_application_id');
 
             function openTransferModal(applicationId) {
-                transferModalContent.innerHTML = `
-                    <div class="modal-header">
-                        <h2>Transferir Vaga</h2>
-                        <button type="button" class="modal-close-btn" id="close-transfer-modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="/painel/operador/meus-turnos/transferir" method="POST" id="transfer-form">
-                            <input type="hidden" name="application_id" value="${applicationId}">
-                            <div class="form-group">
-                                <label for="username">@Username do Operador de Destino</label>
-                                <input type="text" id="username" name="username" required placeholder="ex: joao_silva">
-                            </div>
-                            <div class="form-group" style="margin-top: 20px;">
-                                <button type="submit">Confirmar Transferência</button>
-                            </div>
-                        </form>
-                    </div>
-                `;
-                body.classList.add('modal-open');
-                transferModalContent.querySelector('#close-transfer-modal').addEventListener('click', closeTransferModal);
+                transferApplicationIdInput.value = applicationId;
+                transferModalContainer.style.display = 'flex';
             }
 
             function closeTransferModal() {
-                body.classList.remove('modal-open');
+                transferModalContainer.style.display = 'none';
             }
 
             openTransferBtns.forEach(btn => {
@@ -218,14 +180,19 @@ if (isset($_GET['status'])) {
                 });
             });
 
-            if (transferModalOverlay) {
-                transferModalOverlay.addEventListener('click', function(e) {
-                    if (e.target === transferModalOverlay) {
-                        closeTransferModal();
-                    }
-                });
-            }
-        });
+            closeTransferBtn.addEventListener('click', closeTransferModal);
+            transferModalContainer.addEventListener('click', (e) => {
+                if (e.target === transferModalContainer) {
+                    closeTransferModal();
+                }
+            });
+            document.addEventListener('keydown', (e) => { 
+                if (e.key === "Escape" && transferModalContainer.style.display === 'flex') {
+                    closeTransferModal();
+                }
+            });
+        }
+    });
     </script>
 </body>
 </html>

@@ -1,12 +1,3 @@
-<?php
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-    http_response_code(403); die('Acesso negado.');
-}
-if (!isset($store) || !isset($erpSystems)) die('Erro: Dados não carregados.');
-
-// Para obter o ID da empresa para o link de "Voltar"
-$companyId = $store['company_id'];
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -17,11 +8,15 @@ $companyId = $store['company_id'];
 <body>
     <div class="container" style="padding: 40px 0; max-width: 800px;">
         <h1>Editar Loja</h1>
-        <p><a href="/admin/stores?company_id=<?= $companyId ?>">&larr; Voltar para a Lista de Lojas</a></p>
+        <p><a href="/admin/stores?company_id=<?= htmlspecialchars($store['company_id']) ?>">&larr; Voltar para a Lista de Lojas</a></p>
         
         <form action="/admin/stores/atualizar" method="POST" class="form-panel" style="margin-top: 20px;">
+            
+            <?php display_flash_message(); ?>
+            <?php csrf_field(); ?>
+
             <input type="hidden" name="id" value="<?= $store['id'] ?>">
-            <input type="hidden" name="company_id" value="<?= $companyId ?>">
+            <input type="hidden" name="company_id" value="<?= $store['company_id'] ?>">
             
             <fieldset>
                 <legend>Dados da Loja</legend>
@@ -46,7 +41,7 @@ $companyId = $store['company_id'];
                 </div>
                 <div class="form-group">
                     <label for="inscricao_estadual">Inscrição Estadual (IE)</label>
-                    <input type="text" id="inscricao_estadual" name="inscricao_estadual" required value="<?= htmlspecialchars($store['inscricao_estadual']) ?>">
+                    <input type="text" id="inscricao_estadual" name="inscricao_estadual" value="<?= htmlspecialchars($store['inscricao_estadual']) ?>">
                 </div>
             </fieldset>
 

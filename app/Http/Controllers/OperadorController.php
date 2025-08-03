@@ -1,8 +1,11 @@
 <?php
 
-require_once __DIR__ . '/../../Database/Connection.php';
-require_once __DIR__ . '/../../Utils/Validators.php';
-require_once __DIR__ . '/../../Utils/Email.php';
+namespace App\Http\Controllers;
+
+use App\Database\Connection;
+use App\Utils\Validators;
+use App\Utils\Email;
+use PDOException;
 
 class OperadorController
 {
@@ -21,7 +24,7 @@ class OperadorController
             $operators = $stmt->fetchAll();
 
             require_once __DIR__ . '/../../Views/admin/operadores/listar_operadores.php';
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             die('Erro ao buscar os operadores: ' . $e->getMessage());
         }
     }
@@ -57,26 +60,29 @@ class OperadorController
         $bairro = $_POST['bairro'] ?? null;
         $cidade = $_POST['cidade'] ?? null;
         $estado = $_POST['estado'] ?? null;
-
-        if (empty($name) || empty($cpf) || empty($email) || empty($password)) {
+        
+        $cpfLimpo = preg_replace('/[^0-9]/', '', $cpf);
+        $telefoneLimpo = $phone ? preg_replace('/[^0-9]/', '', $phone) : null;
+        $cepLimpo = $cep ? preg_replace('/[^0-9]/', '', $cep) : null;
+        
+        if (empty($name) || empty($cpfLimpo) || empty($email) || empty($password)) {
             die('Erro: Nome, CPF, E-mail e Senha são obrigatórios.');
         }
-        if (!Validators::validateCpf($cpf)) {
+        if (!Validators::validateCpf($cpfLimpo)) {
             die('Erro: O CPF fornecido é inválido.');
         }
 
         try {
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-            $cpf_cleaned = preg_replace('/[^0-9]/', '', $cpf);
-
+            
             $pdo = Connection::getPdo();
             $sql = "INSERT INTO operators (name, cpf, phone, email, password, cep, endereco, numero, bairro, cidade, estado, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ativo')";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$name, $cpf_cleaned, $phone, $email, $passwordHash, $cep, $endereco, $numero, $bairro, $cidade, $estado]);
+            $stmt->execute([$name, $cpfLimpo, $telefoneLimpo, $email, $passwordHash, $cepLimpo, $endereco, $numero, $bairro, $cidade, $estado]);
 
             header('Location: /admin/operadores');
             exit();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             if ($e->errorInfo[1] == 1062) {
                 die('Erro: O E-mail ou CPF fornecido já está registado na plataforma.');
             }
@@ -101,7 +107,7 @@ class OperadorController
             $operator = $stmt->fetch();
             if (!$operator) die('Operador não encontrado.');
             require_once __DIR__ . '/../../Views/admin/operadores/editar_operador.php';
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             die('Erro ao buscar os dados do operador: ' . $e->getMessage());
         }
     }
@@ -129,20 +135,23 @@ class OperadorController
         $cidade = $_POST['cidade'] ?? null;
         $estado = $_POST['estado'] ?? null;
         
+        $cpfLimpo = preg_replace('/[^0-9]/', '', $cpf);
+        $telefoneLimpo = $phone ? preg_replace('/[^0-9]/', '', $phone) : null;
+        $cepLimpo = $cep ? preg_replace('/[^0-9]/', '', $cep) : null;
+
         if (!$id) die('Erro: ID do operador em falta.');
-        if (!Validators::validateCpf($cpf)) die('Erro: O CPF fornecido é inválido.');
+        if (!Validators::validateCpf($cpfLimpo)) die('Erro: O CPF fornecido é inválido.');
 
         try {
             $pdo = Connection::getPdo();
-            $cpf_cleaned = preg_replace('/[^0-9]/', '', $cpf);
-
+            
             if (!empty($password)) {
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
                 $sql = "UPDATE operators SET name = ?, cpf = ?, phone = ?, email = ?, password = ?, cep = ?, endereco = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, status = ? WHERE id = ?";
-                $params = [$name, $cpf_cleaned, $phone, $email, $passwordHash, $cep, $endereco, $numero, $bairro, $cidade, $estado, $status, $id];
+                $params = [$name, $cpfLimpo, $telefoneLimpo, $email, $passwordHash, $cepLimpo, $endereco, $numero, $bairro, $cidade, $estado, $status, $id];
             } else {
                 $sql = "UPDATE operators SET name = ?, cpf = ?, phone = ?, email = ?, cep = ?, endereco = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, status = ? WHERE id = ?";
-                $params = [$name, $cpf_cleaned, $phone, $email, $cep, $endereco, $numero, $bairro, $cidade, $estado, $status, $id];
+                $params = [$name, $cpfLimpo, $telefoneLimpo, $email, $cepLimpo, $endereco, $numero, $bairro, $cidade, $estado, $status, $id];
             }
             
             $stmt = $pdo->prepare($sql);
@@ -151,7 +160,7 @@ class OperadorController
             header('Location: /admin/operadores');
             exit();
 
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             if ($e->errorInfo[1] == 1062) {
                 die('Erro: O E-mail ou CPF fornecido já pertence a outro operador.');
             }
@@ -180,7 +189,7 @@ class OperadorController
             $updateStmt->execute([$newStatus, $operatorId]);
             header('Location: /admin/operadores');
             exit();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             die('Erro ao alterar o status do operador: ' . $e->getMessage());
         }
     }
@@ -202,7 +211,7 @@ class OperadorController
             $operator = $stmt->fetch();
             if (!$operator) die('Operador não encontrado.');
             require_once __DIR__ . '/../../Views/admin/operadores/verificar.php';
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             die('Erro ao buscar os dados do operador para verificação: ' . $e->getMessage());
         }
     }
@@ -252,7 +261,7 @@ class OperadorController
 
             header('Location: /admin/operadores');
             exit();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             die('Erro ao processar a verificação do operador: ' . $e->getMessage());
         }
     }

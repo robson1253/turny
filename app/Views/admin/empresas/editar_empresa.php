@@ -20,7 +20,15 @@ if (!isset($company)) {
         
         <form action="/admin/empresas/atualizar" method="POST" class="form-panel" style="margin-top: 20px;">
             
-            <input type="hidden" name="id" value="<?= $company['id'] ?>">
+            <?php 
+            // Exibe qualquer mensagem flash (de erro, por exemplo)
+            display_flash_message(); 
+
+            // Adiciona o campo CSRF oculto e obrigatório
+            csrf_field(); 
+            ?>
+            
+            <input type="hidden" name="id" value="<?= htmlspecialchars($company['id']) ?>">
 
             <fieldset>
                 <legend>Dados da Empresa-Mãe</legend>

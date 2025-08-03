@@ -1,9 +1,22 @@
 <?php
-if (!isset($_SESSION['user_id']) || empty($_SESSION['company_id'])) {
-    header('Location: /login'); exit();
+// --- LÓGICA PARA REORDENAR E PRÉ-SELECIONAR A FUNÇÃO ---
+$operadorDeCaixa = null;
+$outrasFuncoes = [];
+if (isset($jobFunctions)) {
+    foreach ($jobFunctions as $funcao) {
+        if ($funcao['name'] === 'Operador de Caixa') {
+            $operadorDeCaixa = $funcao;
+        } else {
+            $outrasFuncoes[] = $funcao;
+        }
+    }
 }
-if (!isset($stores)) $stores = [];
-if (!isset($templates)) $templates = [];
+// Se "Operador de Caixa" foi encontrado, coloca-o no início do array.
+if ($operadorDeCaixa) {
+    array_unshift($outrasFuncoes, $operadorDeCaixa);
+}
+$jobFunctionsOrdenado = $outrasFuncoes;
+// --- FIM DA LÓGICA ---
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -11,18 +24,39 @@ if (!isset($templates)) $templates = [];
     <meta charset="UTF-8">
     <title>Gerir Turnos Padrão - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .btn-link-danger {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            color: var(--cor-perigo, #dc3545);
+        }
+        .btn-link-danger:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <div class="container" style="padding: 40px 0; max-width: 1000px; display: flex; gap: 40px;">
-	<a href="/painel/empresa">← Voltar para o Painel</a>
+    <div class="container" style="padding: 40px 0; max-width: 1000px; display: flex; gap: 40px; align-items: flex-start;">
+    
         <div style="flex: 1;">
             <h2>Turnos Padrão Criados</h2>
-            <p>Estes são os seus modelos de turno. Eles irão aparecer como sugestões no seu novo Planeador Semanal.</p>
-            <table class="table">
+			<p><a href="/painel/empresa">&larr; Voltar para o Painel</a></p>
+            <p>Estes são os seus modelos de turno. Eles irão aparecer como sugestões no seu Planeador Semanal.</p>
+            
+            <?php display_flash_message(); ?>
+
+            <table class="table" style="margin-top: 20px;">
                 <thead>
                     <tr>
                         <th>Loja</th>
-                        <th>Título do Turno</th>
+                        <th>Função do Turno</th>
                         <th>Horário</th>
                         <th>Ações</th>
                     </tr>
@@ -34,10 +68,14 @@ if (!isset($templates)) $templates = [];
                         <?php foreach ($templates as $template): ?>
                             <tr>
                                 <td><?= htmlspecialchars($template['store_name']) ?></td>
-                                <td><?= htmlspecialchars($template['title']) ?></td>
+                                <td><?= htmlspecialchars($template['function_name'] ?? 'Função Apagada') ?></td>
                                 <td><?= htmlspecialchars(substr($template['start_time'], 0, 5)) ?> - <?= htmlspecialchars(substr($template['end_time'], 0, 5)) ?></td>
                                 <td class="actions">
-                                    <a href="/painel/vagas/templates/apagar?id=<?= $template['id'] ?>" class="disable" onclick="return confirm('Tem a certeza que deseja apagar este modelo de turno?');">Apagar</a>
+                                    <form action="/painel/vagas/templates/apagar" method="POST" style="display:inline;" onsubmit="return confirm('Tem a certeza que deseja apagar este modelo de turno?');">
+                                        <?php csrf_field(); ?>
+                                        <input type="hidden" name="id" value="<?= $template['id'] ?>">
+                                        <button type="submit" class="btn-link-danger">Apagar</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -48,6 +86,7 @@ if (!isset($templates)) $templates = [];
 
         <div style="flex: 0 0 350px;">
             <form action="/painel/vagas/templates/criar" method="POST" class="form-panel">
+                <?php csrf_field(); ?>
                 <fieldset>
                     <legend>Criar Novo Turno Padrão</legend>
                     <div class="form-group">
@@ -60,8 +99,16 @@ if (!isset($templates)) $templates = [];
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="title">Título do Turno</label>
-                        <input type="text" name="title" id="title" required placeholder="Ex: Turno da Manhã">
+                        <label for="job_function_id">Função do Turno</label>
+                        <select name="job_function_id" id="job_function_id" required>
+                            <option value="">Selecione uma função...</option>
+                            <?php foreach ($jobFunctionsOrdenado as $function): ?>
+                                <!-- Adiciona o atributo 'selected' se o nome for "Operador de Caixa" -->
+                                <option value="<?= $function['id'] ?>" <?= ($function['name'] === 'Operador de Caixa') ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($function['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="start_time">Hora de Início</label>

@@ -1,9 +1,12 @@
 <?php
 
-require_once __DIR__ . '/../../Database/Connection.php';
-require_once __DIR__ . '/../../Utils/Validators.php';
+namespace App\Http\Controllers;
 
-class EmpresaController 
+use App\Database\Connection;
+use PDOException;
+use Exception;
+
+class EmpresaController extends BaseController
 {
     /**
      * Mostra a lista de empresas.
@@ -11,108 +14,126 @@ class EmpresaController
     public function index()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
         try {
             $pdo = Connection::getPdo();
-            // A query agora busca menos campos para a listagem principal
             $stmt = $pdo->query('SELECT id, razao_social, nome_fantasia, status FROM companies ORDER BY created_at DESC');
             $companies = $stmt->fetchAll();
-            require_once __DIR__ . '/../../Views/admin/empresas/listar_empresas.php';
-        } catch (\PDOException $e) {
-            die('Erro ao buscar as empresas: ' . $e->getMessage());
+            
+            $this->view('admin/empresas/listar_empresas', ['companies' => $companies]);
+
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 
     /**
-     * Mostra o formulário de edição de empresa (simplificado).
+     * Mostra o formulário de edição de empresa.
      */
     public function edit()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
         $id = $_GET['id'] ?? null;
-        if (!$id) die('ID da empresa não fornecido.');
+        if (!$id) {
+            throw new Exception('ID da empresa não fornecido.');
+        }
         try {
             $pdo = Connection::getPdo();
-            // Busca apenas os dados da empresa-mãe
             $stmt = $pdo->prepare('SELECT id, razao_social, nome_fantasia, telefone, contact_email FROM companies WHERE id = ?');
             $stmt->execute([$id]);
             $company = $stmt->fetch();
-            if (!$company) die('Empresa não encontrada.');
-            require_once __DIR__ . '/../../Views/admin/empresas/editar_empresa.php';
-        } catch (\PDOException $e) {
-            die('Erro ao buscar os dados da empresa: ' . $e->getMessage());
+            if (!$company) {
+                throw new Exception('Empresa não encontrada.');
+            }
+            $this->view('admin/empresas/editar_empresa', ['company' => $company]);
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 
     /**
-     * Atualiza os dados da empresa (simplificado).
+     * Atualiza os dados da empresa.
      */
     public function update()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
+        verify_csrf_token();
+
         $id = $_POST['id'] ?? null;
         $razao_social = $_POST['razao_social'] ?? '';
         $nome_fantasia = $_POST['nome_fantasia'] ?? '';
         $telefone = $_POST['telefone'] ?? '';
         $contact_email = $_POST['contact_email'] ?? '';
-        if (!$id) die('Erro: ID em falta.');
+
+        if (!$id) {
+            throw new Exception('ID em falta.');
+        }
+
+        $telefoneLimpo = preg_replace('/[^0-9]/', '', $telefone);
+
         try {
             $pdo = Connection::getPdo();
-            // Query de UPDATE simplificada
             $sql = "UPDATE companies SET razao_social = ?, nome_fantasia = ?, telefone = ?, contact_email = ? WHERE id = ?";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$razao_social, $nome_fantasia, $telefone, $contact_email, $id]);
+            $stmt->execute([$razao_social, $nome_fantasia, $telefoneLimpo, $contact_email, $id]);
+            
+            flash('Empresa atualizada com sucesso!');
             header('Location: /admin/empresas');
             exit();
-        } catch (\PDOException $e) {
-            die('Erro ao atualizar a empresa: ' . $e->getMessage());
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
     
     /**
-     * Mostra o formulário de criação de empresa (simplificado).
+     * Mostra o formulário de criação de empresa.
      */
     public function showCreateForm()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
-        require_once __DIR__ . '/../../Views/admin/empresas/criar_empresa.php';
+        $this->view('admin/empresas/criar_empresa');
     }
 
     /**
-     * Guarda a conta da empresa e os seus utilizadores (simplificado).
+     * Guarda a conta da empresa e os seus utilizadores.
      */
     public function store()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
-
-        // Pega apenas os dados da empresa-mãe, sem endereço ou CNPJ
+        verify_csrf_token();
+        
         $razao_social = $_POST['razao_social'] ?? '';
         $nome_fantasia = $_POST['nome_fantasia'] ?? '';
         $telefone = $_POST['telefone'] ?? '';
         $contact_email = $_POST['contact_email'] ?? '';
+        $telefoneLimpo = preg_replace('/[^0-9]/', '', $telefone);
 
-        if(empty($razao_social) || empty($nome_fantasia)) die('Razão Social e Nome Fantasia são obrigatórios.');
+        if(empty($razao_social) || empty($nome_fantasia)) {
+            throw new Exception('Razão Social e Nome Fantasia são obrigatórios.');
+        }
+        // Validação básica de senhas
+        if(empty($_POST['admin_password']) || empty($_POST['manager_password']) || empty($_POST['receptionist_password'])) {
+            throw new Exception('Todas as senhas dos utilizadores são obrigatórias.');
+        }
 
         $pdo = Connection::getPdo();
         try {
             $pdo->beginTransaction();
             
-            // Query de INSERT simplificada
             $sqlCompany = "INSERT INTO companies (razao_social, nome_fantasia, telefone, contact_email) VALUES (?, ?, ?, ?)";
             $stmtCompany = $pdo->prepare($sqlCompany);
-            $stmtCompany->execute([$razao_social, $nome_fantasia, $telefone, $contact_email]);
+            $stmtCompany->execute([$razao_social, $nome_fantasia, $telefoneLimpo, $contact_email]);
             $companyId = $pdo->lastInsertId();
 
-            // A criação dos 3 utilizadores associados à empresa continua igual
             $sqlUser = "INSERT INTO users (name, email, password, role, company_id) VALUES (?, ?, ?, ?, ?)";
             $stmtUser = $pdo->prepare($sqlUser);
             $stmtUser->execute([$_POST['admin_name'], $_POST['admin_email'], password_hash($_POST['admin_password'], PASSWORD_DEFAULT), 'administrador', $companyId]);
@@ -120,12 +141,13 @@ class EmpresaController
             $stmtUser->execute([$_POST['receptionist_name'], $_POST['receptionist_email'], password_hash($_POST['receptionist_password'], PASSWORD_DEFAULT), 'recepcionista', $companyId]);
 
             $pdo->commit();
-            // Após criar a empresa, redireciona para a página de gestão de lojas da nova empresa
+            
+            flash('Empresa e utilizadores criados com sucesso!');
             header('Location: /admin/stores?company_id=' . $companyId);
             exit();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             $pdo->rollBack();
-            die('Erro ao criar a conta da empresa: ' . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -135,23 +157,32 @@ class EmpresaController
     public function toggleStatus() 
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
-        $id = $_GET['id'] ?? null;
-        if (!$id) die('ID da empresa não fornecido.');
+        // Ação POST segura com CSRF
+        verify_csrf_token();
+        $id = $_POST['id'] ?? null;
+
+        if (!$id) {
+            throw new Exception('ID da empresa não fornecido.');
+        }
         $pdo = Connection::getPdo();
         try {
             $stmt = $pdo->prepare('SELECT status FROM companies WHERE id = ?');
             $stmt->execute([$id]);
             $company = $stmt->fetch();
-            if (!$company) die('Empresa não encontrada.');
+            if (!$company) {
+                throw new Exception('Empresa não encontrada.');
+            }
             $newStatus = ($company['status'] == 1) ? 0 : 1;
             $updateStmt = $pdo->prepare('UPDATE companies SET status = ? WHERE id = ?');
             $updateStmt->execute([$newStatus, $id]);
+            
+            flash('Status da empresa alterado com sucesso!');
             header('Location: /admin/empresas');
             exit();
-        } catch (\PDOException $e) {
-            die('Erro ao alterar o status da empresa: ' . $e->getMessage());
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 }

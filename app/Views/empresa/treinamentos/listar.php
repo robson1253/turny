@@ -1,20 +1,43 @@
-<?php
-if (!isset($_SESSION['user_id']) || empty($_SESSION['company_id'])) {
-    header('Location: /login'); exit();
-}
-if (!isset($requests)) $requests = [];
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Solicitações de Treinamento - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Estilos para fazer os botões parecerem links, mantendo a aparência original */
+        .actions form {
+            display: inline;
+            margin-right: 10px;
+        }
+        .btn-link-action {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            font-family: inherit;
+            font-size: 1em; /* Usa o tamanho de fonte da tabela */
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn-link-action.enable {
+            color: var(--cor-sucesso, #28a745);
+        }
+        .btn-link-action.disable {
+            color: var(--cor-perigo, #dc3545);
+        }
+        .btn-link-action:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <div class="container" style="padding: 40px 0; max-width: 1200px;">
         <h1>Solicitações de Treinamento</h1>
         <p><a href="/painel/empresa">&larr; Voltar para o Painel</a></p>
+        
+        <?php display_flash_message(); ?>
         
         <table class="table">
             <thead>
@@ -54,8 +77,20 @@ if (!isset($requests)) $requests = [];
                             </td>
                             <td class="actions">
                                 <?php if(in_array($request['training_status'], ['solicitado', 'agendado'])): ?>
-                                    <a href="/painel/treinamentos/processar?id=<?= $request['training_id'] ?>&action=approve" class="enable" onclick="return confirm('Confirma a APROVAÇÃO deste operador no treinamento?');">Aprovar</a>
-                                    <a href="/painel/treinamentos/processar?id=<?= $request['training_id'] ?>&action=reject" class="disable" onclick="return confirm('Tem a certeza que quer REPROVAR este operador?');">Reprovar</a>
+                                    <!-- Formulário seguro para Aprovar -->
+                                    <form action="/painel/treinamentos/processar" method="POST" onsubmit="return confirm('Confirma a APROVAÇÃO deste operador no treinamento?');">
+                                        <?php csrf_field(); ?>
+                                        <input type="hidden" name="id" value="<?= $request['training_id'] ?>">
+                                        <input type="hidden" name="action" value="approve">
+                                        <button type="submit" class="btn-link-action enable">Aprovar</button>
+                                    </form>
+                                    <!-- Formulário seguro para Reprovar -->
+                                    <form action="/painel/treinamentos/processar" method="POST" onsubmit="return confirm('Tem a certeza que quer REPROVAR este operador?');">
+                                        <?php csrf_field(); ?>
+                                        <input type="hidden" name="id" value="<?= $request['training_id'] ?>">
+                                        <input type="hidden" name="action" value="reject">
+                                        <button type="submit" class="btn-link-action disable">Reprovar</button>
+                                    </form>
                                 <?php else: ?>
                                     <span style="color: #777;">Já Processado</span>
                                 <?php endif; ?>

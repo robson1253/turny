@@ -1,16 +1,11 @@
 <?php
-// Inicia a sessão se ainda não tiver sido iniciada para poder ler as variáveis
+// A verificação de sessão já é feita no helpers.php, mas não faz mal mantê-la aqui.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 // Verifica se há uma mensagem de sucesso de registo na URL
 $registerSuccess = isset($_GET['status']) && $_GET['status'] === 'register_success';
-
-// Pega a mensagem de erro de login da sessão, se existir
-$loginError = $_SESSION['login_error'] ?? null;
-// Limpa a mensagem da sessão para que ela não apareça novamente na próxima vez que a página for carregada
-unset($_SESSION['login_error']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -20,26 +15,24 @@ unset($_SESSION['login_error']);
     <title>Login - Plataforma TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        .error-message {
-            background-color: #fce4e4;
-            color: #c62828;
-            border: 1px solid #c62828;
+        /* Estilos para as mensagens flash (pode mover para seu style.css principal) */
+        .flash-message {
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
-            text-align: left;
             font-size: 14px;
             font-weight: bold;
+            text-align: left;
         }
-        .success-message { /* Garantindo que o estilo de sucesso também está aqui */
-             background-color: #e8f5e9;
-             color: var(--cor-destaque);
-             border-left: 5px solid var(--cor-sucesso);
-             border-radius: 8px;
-             padding: 15px;
-             margin-bottom: 20px;
-             font-size: 14px;
-             font-weight: bold;
+        .flash-message.error {
+            background-color: #fce4e4;
+            color: #c62828;
+            border: 1px solid #c62828;
+        }
+        .flash-message.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #2e7d32;
         }
     </style>
 </head>
@@ -47,22 +40,25 @@ unset($_SESSION['login_error']);
 
     <div class="login-container">
         <?php if ($registerSuccess): ?>
-            <div class="success-message">
+            <div class="flash-message success">
                 Registo concluído com sucesso! A sua conta está em análise. Será notificado por e-mail assim que for aprovada.
             </div>
         <?php endif; ?>
 
-        <?php if ($loginError): ?>
-            <div class="error-message">
-                <?= htmlspecialchars($loginError) ?>
-            </div>
-        <?php endif; ?>
+        <?php 
+        // 1. Exibe a mensagem flash de erro (se existir) e depois a apaga.
+        display_flash_message(); 
+        ?>
 
         <h2 style="margin-top:0;">
             <span style="color: var(--cor-texto);">Painel </span><a href="/" class="logo" style="text-decoration: none;">Turn<span>y</span></a>
         </h2>
         
         <form action="/login" method="POST">
+            <?php 
+            // 2. Adiciona o campo CSRF oculto e obrigatório ao formulário.
+            csrf_field(); 
+            ?>
             <div class="form-group">
                 <label for="email">E-mail</label>
                 <input type="email" id="email" name="email" required>

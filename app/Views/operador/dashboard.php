@@ -1,26 +1,3 @@
-<?php
-if (!isset($_SESSION['operator_id'])) {
-    header('Location: /login'); exit();
-}
-if (!isset($vagasAbertas)) {
-    $vagasAbertas = [];
-}
-
-// Verifica se há uma mensagem de status na URL
-$successMessage = '';
-$errorMessage = '';
-if (isset($_GET['status'])) {
-    if ($_GET['status'] === 'accept_success') {
-        $successMessage = 'Vaga aceite com sucesso! Pode ver os detalhes em "Meus Turnos".';
-    }
-    if ($_GET['status'] === 'conflict_error') {
-        $errorMessage = 'Não foi possível aceitar a vaga. O horário entra em conflito com outro turno que você já aceitou.';
-    }
-    if ($_GET['status'] === 'not_available_error') {
-        $errorMessage = 'Esta vaga acabou de ser preenchida por outro operador.';
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -29,14 +6,15 @@ if (isset($_GET['status'])) {
     <title>Vagas Disponíveis - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        .error-message {
-            background-color: #fce4e4;
-            color: #c62828;
-            border: 1px solid var(--cor-perigo);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-weight: bold;
+        /* Estilo para o formulário de aceitar vaga parecer um botão grande */
+        .vaga-card-footer form {
+            flex-grow: 2;
+            display: flex;
+			background-color: green;
+        }
+        .vaga-card-footer button {
+            width: 100%;
+			background-color: green;
         }
     </style>
 </head>
@@ -51,16 +29,11 @@ if (isset($_GET['status'])) {
         </header>
 
         <main class="operador-content">
-            <?php if ($successMessage): ?>
-                <div class="success-message">
-                    <?= htmlspecialchars($successMessage) ?>
-                </div>
-            <?php endif; ?>
-            <?php if ($errorMessage): ?>
-                <div class="error-message">
-                    <?= htmlspecialchars($errorMessage) ?>
-                </div>
-            <?php endif; ?>
+            
+            <?php 
+            // Exibe mensagens de sucesso ou erro vindas do controller
+            display_flash_message(); 
+            ?>
 
             <h2 style="color: var(--cor-destaque); margin-top: 0;">Vagas Disponíveis</h2>
             <p style="margin-top: -10px; margin-bottom: 30px;">Olá, <strong><?= htmlspecialchars($_SESSION['user_name']) ?></strong>! Estas são as oportunidades abertas para si.</p>
@@ -93,7 +66,12 @@ if (isset($_GET['status'])) {
                                 </div>
                             </div>
                             <div class="vaga-card-footer">
-                                <a href="/painel/operador/vagas/aceitar?id=<?= $vaga['id'] ?>" class="edit-btn" style="background-color: var(--cor-sucesso); flex-grow: 2;" onclick="return confirm('Tem a certeza que deseja aceitar esta vaga? A sua presença será confirmada instantaneamente.');">Aceitar Vaga</a>
+                                <!-- Ação de Aceitar Vaga agora é um formulário POST seguro -->
+                                <form action="/painel/operador/vagas/aceitar" method="POST" onsubmit="return confirm('Tem a certeza que deseja aceitar esta vaga? A sua presença será confirmada instantaneamente.');">
+                                    <?php csrf_field(); ?>
+                                    <input type="hidden" name="id" value="<?= $vaga['id'] ?>">
+                                    <button type="submit" class="btn success-btn">Aceitar Vaga</button>
+                                </form>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -101,26 +79,27 @@ if (isset($_GET['status'])) {
             </div>
         </main>
 
-<footer class="operador-footer">
-    <a href="/painel/operador" class="footer-icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
-        Vagas
-    </a>
-    <a href="/painel/operador/meus-turnos" class="footer-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" /></svg>
-        Meus Turnos
-    </a>
-    <a href="/painel/operador/ofertas" class="footer-icon" style="position: relative;">
-        <?php if (isset($pendingOffers) && $pendingOffers > 0): ?>
-            <span class="notification-badge"><?= $pendingOffers ?></span>
-        <?php endif; ?>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 17H20V12H4V17H2V12C2 10.9 2.9 10 4 10H20C21.1 10 22 10.9 22 12V17M15.5 2H8.5L7.3 5H16.7L15.5 2M18 5H6L5 7V9H19V7L18 5M12 13C13.1 13 14 13.9 14 15S13.1 17 12 17 10 16.1 10 15 10.9 13 12 13Z" /></svg>
-        Ofertas
-    </a>
-    <a href="/painel/operador/perfil" class="footer-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
-        Perfil
-    </a>
-</footer>
+        <footer class="operador-footer">
+            <a href="/painel/operador" class="footer-icon active">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+                Vagas
+            </a>
+            <a href="/painel/operador/meus-turnos" class="footer-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" /></svg>
+                Meus Turnos
+            </a>
+            <a href="/painel/operador/ofertas" class="footer-icon" style="position: relative;">
+                <?php if (isset($pendingOffers) && $pendingOffers > 0): ?>
+                    <span class="notification-badge"><?= $pendingOffers ?></span>
+                <?php endif; ?>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 17H20V12H4V17H2V12C2 10.9 2.9 10 4 10H20C21.1 10 22 10.9 22 12V17M15.5 2H8.5L7.3 5H16.7L15.5 2M18 5H6L5 7V9H19V7L18 5M12 13C13.1 13 14 13.9 14 15S13.1 17 12 17 10 16.1 10 15 10.9 13 12 13Z" /></svg>
+                Ofertas
+            </a>
+            <a href="/painel/operador/perfil" class="footer-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+                Perfil
+            </a>
+        </footer>
     </div>
 
 </body>

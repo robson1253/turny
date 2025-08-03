@@ -1,11 +1,3 @@
-<?php
-if (!isset($_SESSION['operator_id'])) {
-    header('Location: /login'); exit();
-}
-if (!isset($operator)) die('Erro: Dados do operador não carregados.');
-if (!isset($qualifications)) $qualifications = [];
-if (!isset($pendingOffers)) $pendingOffers = 0;
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -15,33 +7,72 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
     <link rel="stylesheet" href="/css/style.css">
     <style>
         .profile-header { text-align: center; margin-bottom: 30px; }
-        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--cor-branco); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--cor-branco); box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+        .profile-avatar:hover { transform: scale(1.05); }
         .profile-name { font-size: 1.8em; font-weight: bold; margin: 10px 0 5px 0; color: var(--cor-destaque); }
         .profile-section { margin-bottom: 30px; }
         .profile-section h3 { border-bottom: 2px solid var(--cor-primaria); padding-bottom: 10px; margin-bottom: 15px; font-size: 1.2em; }
         .data-item { margin-bottom: 15px; font-size: 1.1em; line-height: 1.4; }
         .data-item label { font-weight: bold; color: var(--cor-texto); display: block; font-size: 0.9em; opacity: 0.7; text-transform: uppercase; margin-bottom: 2px;}
-        .qualifications-grid { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-        .notification-badge { position: absolute; top: 0; right: 5px; background-color: var(--cor-perigo); color: var(--cor-branco); border-radius: 50%; height: 20px; width: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
-        
-        /* Estilo atualizado do emblema */
-        .qualification-badge { 
-            background-color: #e9f2f9;
-            color: var(--cor-primaria);
-            padding: 6px 15px; 
-            border-radius: 20px; 
-            font-size: 14px; 
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid #cce0f1;
+        .qualifications-grid { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; }
+        .qualification-badge { background-color: #e9f2f9; color: var(--cor-primaria); padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border: 1px solid #cce0f1; }
+        .qualification-badge .icon { width: 16px; height: 16px; fill: var(--cor-primaria); }
+
+        /* --- INÍCIO DA CORREÇÃO DEFINITIVA DO MODAL --- */
+.modal-container {
+    display: none; /* mantido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+        .modal-dialog {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            /* Ocupa 90% da largura em ecrãs pequenos, com um máximo de 500px */
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: fadeInModal 0.3s ease-out;
+            position: relative;
         }
-        .qualification-badge .icon {
-            width: 16px;
-            height: 16px;
-            fill: var(--cor-primaria);
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
+        .modal-close-btn {
+            position: absolute;
+            top: 5px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            font-size: 35px;
+            cursor: pointer;
+            color: #aaa;
+            line-height: 1;
+        }
+        .modal-close-btn:hover { color: #333; }
+
+        #image-modal-dialog img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+        #image-modal-dialog #legendaDoModal {
+            text-align: center;
+            color: #666;
+            padding-top: 10px;
+            font-weight: bold;
+        }
+        /* --- FIM DA CORREÇÃO DEFINITIVA DO MODAL --- */
     </style>
 </head>
 <body class="operador-body">
@@ -52,8 +83,14 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
         </header>
 
         <main class="operador-content">
+            <?php display_flash_message(); ?>
+
             <div class="profile-header">
-                <img src="<?= htmlspecialchars($operator['path_selfie']) ?>" alt="Foto de Perfil" class="profile-avatar">
+                <img src="<?= htmlspecialchars($operator['path_selfie_thumb'] ?? $operator['path_selfie']) ?>" 
+                     " 
+                     class="profile-avatar imagem-clicavel"
+                     data-full-image="<?= htmlspecialchars($operator['path_selfie']) ?>">
+                
                 <h2 class="profile-name"><?= htmlspecialchars($operator['name']) ?></h2>
                 <p>@<?= htmlspecialchars($operator['username']) ?></p>
                 <p style="margin-top: -10px;">Pontuação: <strong><?= htmlspecialchars(number_format($operator['pontuacao'], 2)) ?> / 5.00</strong></p>
@@ -61,11 +98,14 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
 
             <div class="profile-section">
                 <h3>Meus Emblemas (Sistemas Qualificados)</h3>
-               <center> <div class="qualifications-grid">
-                    <?php if (empty($qualifications)): ?>
+                <div class="qualifications-grid">
+                    <?php 
+                        $qualificationsList = (!empty($operator['qualifications'])) ? explode(', ', $operator['qualifications']) : [];
+                    ?>
+                    <?php if (empty($qualificationsList)): ?>
                         <p>Você ainda não possui nenhuma qualificação. <a href="/painel/operador/qualificacoes">Clique aqui</a> para solicitar.</p>
                     <?php else: ?>
-                        <?php foreach ($qualifications as $qual): ?>
+                        <?php foreach ($qualificationsList as $qual): ?>
                             <span class="qualification-badge">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"></path></svg>
@@ -73,12 +113,10 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
                                 <?= htmlspecialchars($qual) ?>
                             </span>
                         <?php endforeach; ?>
-                        <br><br>
-                        
                     <?php endif; ?>
                 </div>
-				<p><a href="/painel/operador/qualificacoes">Gerir ou solicitar novas qualificações.</a></p>
-            </div></center>
+                <p style="text-align: center; margin-top: 15px;"><a href="/painel/operador/qualificacoes">Gerir ou solicitar novas qualificações.</a></p>
+            </div>
             
             <div class="profile-section">
                 <h3>Meus Dados</h3>
@@ -100,8 +138,8 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
                 Meus Turnos
             </a>
             <a href="/painel/operador/ofertas" class="footer-icon" style="position: relative;">
-                <?php if (isset($pendingOffers) && $pendingOffers > 0): ?>
-                    <span class="notification-badge"><?= $pendingOffers ?></span>
+                <?php if (isset($operator['pending_offers']) && $operator['pending_offers'] > 0): ?>
+                    <span class="notification-badge"><?= $operator['pending_offers'] ?></span>
                 <?php endif; ?>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 17H20V12H4V17H2V12C2 10.9 2.9 10 4 10H20C21.1 10 22 10.9 22 12V17M15.5 2H8.5L7.3 5H16.7L15.5 2M18 5H6L5 7V9H19V7L18 5M12 13C13.1 13 14 13.9 14 15S13.1 17 12 17 10 16.1 10 15 10.9 13 12 13Z" /></svg>
                 Ofertas
@@ -112,8 +150,51 @@ if (!isset($pendingOffers)) $pendingOffers = 0;
             </a>
         </footer>
     </div>
-	
 
-	
+    <!-- Estrutura do Modal de Imagem (Atualizada) -->
+    <div id="image-modal-container" class="modal-container">
+        <div class="modal-dialog" id="image-modal-dialog">
+            <button class="modal-close-btn" id="close-image-modal">&times;</button>
+            <img src="" id="imagemDoModal" alt="Foto do Operador">
+            <div id="legendaDoModal"></div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageModalContainer = document.getElementById("image-modal-container");
+        if (imageModalContainer) {
+            const modalImg = document.getElementById("imagemDoModal");
+            const legenda = document.getElementById("legendaDoModal");
+            const imagensClicaveis = document.querySelectorAll('.imagem-clicavel');
+            const fecharImg = document.getElementById("close-image-modal");
+
+            imagensClicaveis.forEach(img => {
+                img.addEventListener('click', function() {
+                    const fullImageSrc = this.dataset.fullImage || this.src;
+                    imageModalContainer.style.display = "flex"; // Usa flex para mostrar
+                    modalImg.src = fullImageSrc;
+                    legenda.textContent = this.alt || '';
+                });
+            });
+
+            function closeImageModal() {
+                imageModalContainer.style.display = "none";
+            }
+
+            fecharImg.addEventListener('click', closeImageModal);
+            imageModalContainer.addEventListener('click', (e) => {
+                if (e.target === imageModalContainer) {
+                    closeImageModal();
+                }
+            });
+            document.addEventListener('keydown', (e) => { 
+                if (e.key === "Escape" && imageModalContainer.style.display === 'flex') {
+                    closeImageModal();
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>

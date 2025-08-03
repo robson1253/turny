@@ -1,56 +1,59 @@
 <?php
-// --- CÓDIGO DE DEPURAÇÃO (PODE REMOVER EM PRODUÇÃO) ---
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
-// A PRIMEIRA COISA A FAZER: Inicia ou resume uma sessão em todas as páginas.
-session_start();
+// A PRIMEIRA COISA A FAZER: Inicia ou resume uma sessão.
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 /**
- * -------------------------------------------------------------------------
- * PONTO DE ENTRADA ÚNICO DA APLICAÇÃO (ROTEADOR)
- * -------------------------------------------------------------------------
+ * =================================================================
+ * CONFIGURAÇÃO GLOBAL DA APLICAÇÃO
+ * =================================================================
  */
 
+// 1. Define o ambiente da aplicação ('development' ou 'production')
+// Em produção, mude esta linha para 'production'
+define('APP_ENV', 'development');
 
-// 1. Carrega todos os controllers necessários (apenas uma vez).
+// 2. Carrega o autoloader do Composer e as nossas funções auxiliares
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../app/Http/Controllers/AuthController.php';
-require_once __DIR__ . '/../app/Http/Controllers/EmpresaController.php';
-require_once __DIR__ . '/../app/Http/Controllers/UserController.php';
-require_once __DIR__ . '/../app/Http/Controllers/SettingsController.php';
-require_once __DIR__ . '/../app/Http/Controllers/OperadorController.php';
-require_once __DIR__ . '/../app/Http/Controllers/ApiController.php';
-require_once __DIR__ . '/../app/Http/Controllers/PainelEmpresaController.php';
-require_once __DIR__ . '/../app/Http/Controllers/StoreController.php';
-require_once __DIR__ . '/../app/Http/Controllers/RegisterController.php';
-require_once __DIR__ . '/../app/Http/Controllers/PainelOperadorController.php';
-require_once __DIR__ . '/../app/Http/Controllers/ErpSystemController.php';
-require_once __DIR__ . '/../app/Http/Controllers/PainelAdminEmpresaController.php';
+require_once __DIR__ . '/../app/Utils/helpers.php';
 
+// 3. Configura o manipulador de erros global
+set_exception_handler(function($exception) {
+    // Grava sempre o erro detalhado no arquivo de log
+    $logMessage = "[" . date("Y-m-d H:i:s") . "] " . $exception->getMessage() . " in " . $exception->getFile() . " on line " . $exception->getLine() . "\n";
+    error_log($logMessage, 3, __DIR__ . '/../logs/errors.log');
 
-// 2. Captura a URL (sem query string) e o método da requisição.
+    // Comportamento diferente para produção e desenvolvimento
+    if (APP_ENV === 'production') {
+        http_response_code(500);
+        // Mostra a página de erro amigável
+        require __DIR__ . '/../app/Views/errors/500.php';
+    } else {
+        // Em desenvolvimento, mostra o erro detalhado na tela
+        http_response_code(500);
+        echo "<pre style='background: #fce4e4; color: #c62828; padding: 20px; border-radius: 5px; border: 1px solid #c62828; font-family: monospace;'>";
+        echo "<strong>Fatal Error:</strong><br><br>";
+        echo "<strong>Message:</strong> " . htmlspecialchars($exception->getMessage()) . "<br><br>";
+        echo "<strong>File:</strong> " . $exception->getFile() . "<br>";
+        echo "<strong>Line:</strong> " . $exception->getLine() . "<br>";
+        echo "<strong>Stack Trace:</strong><br>" . htmlspecialchars($exception->getTraceAsString());
+        echo "</pre>";
+    }
+    exit();
+});
+
+/**
+ * =================================================================
+ * PONTO DE ENTRADA ÚNICO DA APLICAÇÃO (ROTEADOR)
+ * =================================================================
+ */
+
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-
-// 3. Instancia todos os controllers.
-$authController = new AuthController();
-$empresaController = new EmpresaController();
-$userController = new UserController();
-$settingsController = new SettingsController();
-$operadorController = new OperadorController();
-$apiController = new ApiController();
-$painelEmpresaController = new PainelEmpresaController();
-$storeController = new StoreController();
-$registerController = new RegisterController();
-$painelOperadorController = new PainelOperadorController();
-$erpSystemController = new ErpSystemController();
-$painelAdminEmpresaController = new PainelAdminEmpresaController();
-
-
-// 4. Lógica do Roteador: decide o que fazer com base na URL.
+// A lógica do roteador continua exatamente a mesma
 switch ($requestUri) {
 
     // --- Rotas Públicas ---
@@ -68,14 +71,19 @@ switch ($requestUri) {
         }
         break;
     case '/login':
-        if ($requestMethod === 'POST') { $authController->processLogin(); } 
-        else { $authController->showLoginForm(); }
+        $controller = new App\Http\Controllers\AuthController();
+        if ($requestMethod === 'POST') { $controller->processLogin(); } 
+        else { $controller->showLoginForm(); }
         break;
     case '/registro/operador':
-        if ($requestMethod === 'POST') { $registerController->registerOperator(); } 
-        else { $registerController->showOperatorForm(); }
+        $controller = new App\Http\Controllers\RegisterController();
+        if ($requestMethod === 'POST') { $controller->registerOperator(); } 
+        else { $controller->showOperatorForm(); }
         break;
 
+    // ... (O resto do seu switch case continua aqui, exatamente como estava) ...
+    // ... (Nenhuma alteração necessária do /logout em diante) ...
+    
     // --- Rotas Protegidas (Autenticadas) ---
     case '/logout':
         session_unset(); session_destroy(); header('Location: /login'); exit();
@@ -86,217 +94,227 @@ switch ($requestUri) {
         require_once __DIR__ . '/../app/Views/dashboard.php';
         break;
     case '/admin/empresas':
-        $empresaController->index();
+        (new App\Http\Controllers\EmpresaController())->index();
         break;
     case '/admin/empresas/criar':
-        if ($requestMethod === 'POST') { $empresaController->store(); } 
-        else { $empresaController->showCreateForm(); }
+        $controller = new App\Http\Controllers\EmpresaController();
+        if ($requestMethod === 'POST') { $controller->store(); } 
+        else { $controller->showCreateForm(); }
         break;
     case '/admin/empresas/editar':
-        $empresaController->edit();
+        (new App\Http\Controllers\EmpresaController())->edit();
         break;
     case '/admin/empresas/atualizar':
-        if ($requestMethod === 'POST') { $empresaController->update(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\EmpresaController())->update(); }
         break;
     case '/admin/empresas/toggle-status':
-        $empresaController->toggleStatus();
+        (new App\Http\Controllers\EmpresaController())->toggleStatus();
         break;
     case '/admin/utilizadores':
-        $userController->index();
+        (new App\Http\Controllers\UserController())->index();
         break;
     case '/admin/utilizadores/editar':
-        $userController->edit();
+        (new App\Http\Controllers\UserController())->edit();
         break;
     case '/admin/utilizadores/atualizar':
-        if ($requestMethod === 'POST') { $userController->update(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\UserController())->update(); }
         break;
     case '/admin/utilizadores/toggle-status':
-        $userController->toggleStatus();
+        (new App\Http\Controllers\UserController())->toggleStatus();
         break;
     case '/admin/settings':
-        $settingsController->index();
+        (new App\Http\Controllers\SettingsController())->index();
         break;
     case '/admin/settings/update':
-        if ($requestMethod === 'POST') { $settingsController->update(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\SettingsController())->update(); }
         break;
     case '/admin/operadores':
-        $operadorController->index();
+        (new App\Http\Controllers\OperadorController())->index();
         break;
     case '/admin/operadores/criar':
-        if ($requestMethod === 'POST') { $operadorController->store(); } 
-        else { $operadorController->showCreateForm(); }
+        $controller = new App\Http\Controllers\OperadorController();
+        if ($requestMethod === 'POST') { $controller->store(); } 
+        else { $controller->showCreateForm(); }
         break;
     case '/admin/operadores/editar':
-        $operadorController->edit();
+        (new App\Http\Controllers\OperadorController())->edit();
         break;
     case '/admin/operadores/atualizar':
-        if ($requestMethod === 'POST') { $operadorController->update(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\OperadorController())->update(); }
         break;
     case '/admin/operadores/toggle-status':
-        $operadorController->toggleStatus();
+        (new App\Http\Controllers\OperadorController())->toggleStatus();
         break;
     case '/admin/operadores/verificar':
-        $operadorController->showVerificationForm();
+        (new App\Http\Controllers\OperadorController())->showVerificationForm();
         break;
     case '/admin/operadores/processar-verificacao':
-        if ($requestMethod === 'POST') { $operadorController->processVerification(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\OperadorController())->processVerification(); }
         break;
     case '/admin/stores':
-        $storeController->index();
+        (new App\Http\Controllers\StoreController())->index();
         break;
     case '/admin/stores/criar':
-        if ($requestMethod === 'POST') { $storeController->store(); } 
-        else { $storeController->showCreateForm(); }
+        $controller = new App\Http\Controllers\StoreController();
+        if ($requestMethod === 'POST') { $controller->store(); } 
+        else { $controller->showCreateForm(); }
         break;
     case '/admin/stores/editar':
-        $storeController->edit();
+        (new App\Http\Controllers\StoreController())->edit();
         break;
     case '/admin/stores/atualizar':
-        if ($requestMethod === 'POST') { $storeController->update(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\StoreController())->update(); }
         break;
     case '/admin/stores/toggle-status':
-        $storeController->toggleStatus();
+        (new App\Http\Controllers\StoreController())->toggleStatus();
         break;
     case '/admin/erps':
-        $erpSystemController->index();
+        (new App\Http\Controllers\ErpSystemController())->index();
         break;
     case '/admin/erps/criar':
-        if ($requestMethod === 'POST') { $erpSystemController->store(); } 
-        else { $erpSystemController->showCreateForm(); }
+        $controller = new App\Http\Controllers\ErpSystemController();
+        if ($requestMethod === 'POST') { $controller->store(); } 
+        else { $controller->showCreateForm(); }
         break;
     case '/admin/erps/editar':
-        $erpSystemController->edit();
+        (new App\Http\Controllers\ErpSystemController())->edit();
         break;
     case '/admin/erps/atualizar':
-        if ($requestMethod === 'POST') { $erpSystemController->update(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\ErpSystemController())->update(); }
         break;
     case '/admin/erps/apagar':
-        $erpSystemController->destroy();
+        (new App\Http\Controllers\ErpSystemController())->destroy();
         break;
-
+	case '/admin/funcoes':
+    (new App\Http\Controllers\JobFunctionController())->index();
+		break;
+	case '/admin/funcoes/criar':
+    $controller = new App\Http\Controllers\JobFunctionController();
+    if ($requestMethod === 'POST') { $controller->store(); } 
+    else { $controller->showCreateForm(); }
+		break;
+	case '/admin/funcoes/editar':
+    (new App\Http\Controllers\JobFunctionController())->edit();
+		break;
+	case '/admin/funcoes/atualizar':
+    if ($requestMethod === 'POST') { (new App\Http\Controllers\JobFunctionController())->update(); }
+		break;
+	case '/admin/funcoes/apagar':
+    if ($requestMethod === 'POST') { (new App\Http\Controllers\JobFunctionController())->destroy(); }
+		break;
     // --- Rotas dos Painéis de Empresa ---
     case '/painel/empresa':
-        $painelEmpresaController->showDashboard();
+        (new App\Http\Controllers\PainelEmpresaController())->showDashboard();
         break;
     case '/painel/empresa-admin':
-        $painelAdminEmpresaController->index();
+        (new App\Http\Controllers\PainelAdminEmpresaController())->index();
         break;
     case '/painel/vagas':
-        $painelEmpresaController->indexVagas();
+        (new App\Http\Controllers\PainelEmpresaController())->indexVagas();
         break;
     case '/painel/vagas/dias':
-        $painelEmpresaController->showDaysForStore();
+        (new App\Http\Controllers\PainelEmpresaController())->showDaysForStore();
         break;
     case '/painel/vagas/dia':
-        $painelEmpresaController->showShiftsByDay();
+        (new App\Http\Controllers\PainelEmpresaController())->showShiftsByDay();
         break;
     case '/painel/vagas/criar':
-        if ($requestMethod === 'POST') { $painelEmpresaController->storeVaga(); }
-        else { $painelEmpresaController->showCreateVagaForm(); }
+        $controller = new App\Http\Controllers\PainelEmpresaController();
+        if ($requestMethod === 'POST') { $controller->storeVaga(); } 
+        else { $controller->showCreateVagaForm(); }
         break;
     case '/painel/vagas/criar-lote':
-        if ($requestMethod === 'POST') { $painelEmpresaController->storeBatchShifts(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->storeBatchShifts(); }
         break;
     case '/painel/vagas/editar':
-        $painelEmpresaController->editVaga();
+        (new App\Http\Controllers\PainelEmpresaController())->editVaga();
         break;
     case '/painel/vagas/atualizar':
-        if ($requestMethod === 'POST') { $painelEmpresaController->updateVaga(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->updateVaga(); }
         break;
     case '/painel/vagas/cancelar':
-        $painelEmpresaController->cancelVaga();
+        (new App\Http\Controllers\PainelEmpresaController())->cancelVaga();
         break;
     case '/painel/vagas/candidatos':
-        $painelEmpresaController->showApplicants();
+        (new App\Http\Controllers\PainelEmpresaController())->showApplicants();
         break;
     case '/painel/vagas/candidatos/status':
-        $painelEmpresaController->updateApplicationStatus();
+        (new App\Http\Controllers\PainelEmpresaController())->updateApplicationStatus();
         break;
     case '/painel/vagas/concluir':
-        if ($requestMethod === 'POST') {
-            $painelEmpresaController->processShiftCompletion();
-        }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->processShiftCompletion(); }
         break;
     case '/painel/vagas/templates':
-        $painelEmpresaController->showShiftTemplates();
+        (new App\Http\Controllers\PainelEmpresaController())->showShiftTemplates();
         break;
     case '/painel/vagas/templates/criar':
-        if ($requestMethod === 'POST') {
-            $painelEmpresaController->storeShiftTemplate();
-        }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->storeShiftTemplate(); }
         break;
-	case '/painel/vagas/criar-lote-semanal':
-        if ($requestMethod === 'POST') {
-            $painelEmpresaController->storeWeeklyPlan();
-        }
+    case '/painel/vagas/criar-lote-semanal':
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->storeWeeklyPlan(); }
         break;
-			
     case '/painel/vagas/templates/apagar':
-        $painelEmpresaController->deleteShiftTemplate();
+        (new App\Http\Controllers\PainelEmpresaController())->deleteShiftTemplate();
         break;
-		case '/painel/vagas/planear':
-        $painelEmpresaController->showPlanner();
+    case '/painel/vagas/planear':
+        (new App\Http\Controllers\PainelEmpresaController())->showPlanner();
         break;
     case '/painel/treinamentos':
-        $painelEmpresaController->listTrainingRequests();
+        (new App\Http\Controllers\PainelEmpresaController())->listTrainingRequests();
         break;
     case '/painel/treinamentos/processar':
-        $painelEmpresaController->processTrainingRequest();
+        (new App\Http\Controllers\PainelEmpresaController())->processTrainingRequest();
         break;
     
     // --- Rotas do Painel do Operador ---
     case '/painel/operador':
-        $painelOperadorController->index();
+        (new App\Http\Controllers\PainelOperadorController())->index();
         break;
     case '/painel/operador/qualificacoes':
-        $painelOperadorController->showQualificationsPage();
+        (new App\Http\Controllers\PainelOperadorController())->showQualificationsPage();
         break;
     case '/painel/operador/qualificacoes/agendar':
-        if ($requestMethod === 'POST') {
-            $painelOperadorController->scheduleTraining();
-        }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelOperadorController())->scheduleTraining(); }
         break;
     case '/painel/operador/vagas/aceitar':
-        $painelOperadorController->acceptShift();
+        (new App\Http\Controllers\PainelOperadorController())->acceptShift();
         break;
     case '/painel/operador/meus-turnos':
-        $painelOperadorController->showMyShifts();
+        (new App\Http\Controllers\PainelOperadorController())->showMyShifts();
         break;
     case '/painel/operador/meus-turnos/cancelar':
-        $painelOperadorController->cancelApplication();
+        (new App\Http\Controllers\PainelOperadorController())->cancelApplication();
         break;
     case '/painel/operador/meus-turnos/transferir':
-        if ($requestMethod === 'POST') { $painelOperadorController->initiateTransfer(); }
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelOperadorController())->initiateTransfer(); }
         break;
     case '/painel/operador/avaliar':
-        if ($requestMethod === 'POST') {
-            $painelOperadorController->rateCompany();
-        } else {
-            $painelOperadorController->showRateCompanyForm();
-        }
+        $controller = new App\Http\Controllers\PainelOperadorController();
+        if ($requestMethod === 'POST') { $controller->rateCompany(); } 
+        else { $controller->showRateCompanyForm(); }
         break;
     case '/painel/operador/ofertas':
-        $painelOperadorController->showTransferOffers();
+        (new App\Http\Controllers\PainelOperadorController())->showTransferOffers();
         break;
     case '/painel/operador/ofertas/responder':
-        $painelOperadorController->respondToTransfer();
+        (new App\Http\Controllers\PainelOperadorController())->respondToTransfer();
         break;
     case '/painel/operador/perfil':
-        $painelOperadorController->showProfile();
+        (new App\Http\Controllers\PainelOperadorController())->showProfile();
         break;
 
     // --- Rotas de API (para o JavaScript) ---
     case '/api/cep-lookup':
-        $apiController->lookupCep();
+        (new App\Http\Controllers\ApiController())->lookupCep();
         break;
     case '/api/company-shifts':
-        $apiController->getShifts();
+        (new App\Http\Controllers\ApiController())->getShifts();
         break;
     case '/api/training-slots':
-        $apiController->getAvailableTrainingSlots();
+        (new App\Http\Controllers\ApiController())->getAvailableTrainingSlots();
         break;
     case '/api/stores-by-erp':
-        $apiController->getStoresByErp();
+        (new App\Http\Controllers\ApiController())->getStoresByErp();
         break;
 
     // --- Rota Padrão (404) ---

@@ -1,11 +1,13 @@
 <?php
 
-// Importa as classes do PHPMailer para o nosso namespace
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+namespace App\Utils; // <-- NAMESPACE CORRIGIDO
 
-class Email
+// Importa as classes do PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+class Email // <-- NOME DA CLASSE CORRIGIDO
 {
     /**
      * Envia um e-mail.

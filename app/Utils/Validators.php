@@ -1,5 +1,8 @@
 <?php
 
+// O "endereço" para este arquivo de utilitários
+namespace App\Utils;
+
 class Validators
 {
     /**
@@ -28,7 +31,7 @@ class Validators
      */
     public static function validateCnpj(string $cnpj): bool
     {
-        $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
+        $cnpj = preg_replace('/[^0-g]/', '', $cnpj);
         if (strlen($cnpj) != 14 || preg_match('/(\d)\1{13}/', $cnpj)) {
             return false;
         }

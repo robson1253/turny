@@ -1,8 +1,13 @@
 <?php
 
-require_once __DIR__ . '/../../Database/Connection.php';
+namespace App\Http\Controllers;
 
-class SettingsController
+use App\Database\Connection;
+use PDO;
+use PDOException;
+use Exception;
+
+class SettingsController extends BaseController
 {
     /**
      * Mostra a página de configurações com os valores atuais.
@@ -10,50 +15,74 @@ class SettingsController
     public function index()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
 
         try {
             $pdo = Connection::getPdo();
-            $stmt = $pdo->query("SELECT setting_key, setting_value FROM settings");
-            $settings = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
             
-            require_once __DIR__ . '/../../Views/admin/settings/index.php';
-        } catch (\PDOException $e) {
-            die('Erro ao buscar as configurações: ' . $e->getMessage());
+            // 1. Busca as configurações gerais
+            $stmtSettings = $pdo->query("SELECT setting_key, setting_value FROM settings");
+            $settings = $stmtSettings->fetchAll(PDO::FETCH_KEY_PAIR);
+            
+            // 2. Busca todas as funções de trabalho para editar os seus valores
+            $jobFunctions = $pdo->query("SELECT id, name, hourly_rate FROM job_functions ORDER BY name ASC")->fetchAll();
+            
+            // 3. Passa ambos os conjuntos de dados para a view
+            $this->view('admin/settings/index', [
+                'settings' => $settings,
+                'jobFunctions' => $jobFunctions
+            ]);
+
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 
     /**
-     * Atualiza as configurações na base de dados. (NOVA FUNÇÃO)
+     * Atualiza as configurações na base de dados.
      */
     public function update()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
+        verify_csrf_token();
 
-        // Os dados do formulário vêm num array chamado 'settings'
         $settings = $_POST['settings'] ?? [];
+        $functions = $_POST['functions'] ?? [];
 
         try {
             $pdo = Connection::getPdo();
-            
-            // Prepara a query de UPDATE uma vez
-            $sql = "UPDATE settings SET setting_value = ? WHERE setting_key = ?";
-            $stmt = $pdo->prepare($sql);
+            $pdo->beginTransaction();
 
-            // Percorre cada configuração enviada e executa o update
+            // 1. Atualiza as configurações gerais (taxa, bónus)
+            $sqlSettings = "UPDATE settings SET setting_value = ? WHERE setting_key = ?";
+            $stmtSettings = $pdo->prepare($sqlSettings);
             foreach ($settings as $key => $value) {
-                $stmt->execute([$value, $key]);
+                // Sanitiza o valor monetário antes de salvar
+                $cleanValue = str_replace(['.', ','], ['', '.'], $value);
+                $stmtSettings->execute([$cleanValue, $key]);
             }
 
-            // Redireciona de volta para a página de configurações após o sucesso
+            // 2. Atualiza os valores por hora de cada função
+            $sqlFunctions = "UPDATE job_functions SET hourly_rate = ? WHERE id = ?";
+            $stmtFunctions = $pdo->prepare($sqlFunctions);
+            foreach ($functions as $id => $rate) {
+                // Sanitiza o valor monetário antes de salvar
+                $cleanRate = str_replace(['.', ','], ['', '.'], $rate);
+                $stmtFunctions->execute([$cleanRate, $id]);
+            }
+
+            $pdo->commit();
+
+            flash('Configurações guardadas com sucesso!');
             header('Location: /admin/settings');
             exit();
 
-        } catch (\PDOException $e) {
-            die('Erro ao guardar as configurações: ' . $e->getMessage());
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            throw $e;
         }
     }
 }

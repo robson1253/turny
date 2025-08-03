@@ -10,11 +10,17 @@
         <h1>Editar Utilizador</h1>
         <p><a href="/admin/utilizadores?company_id=<?= htmlspecialchars($user['company_id']) ?>">&larr; Voltar para a Lista de Utilizadores</a></p>
         
-        <?php display_flash_message(); ?>
+        <?php 
+        // Exibe mensagens de sucesso ou erro vindas do controller
+        display_flash_message(); 
+        ?>
 
         <form action="/admin/utilizadores/atualizar" method="POST" class="form-panel" style="margin-top: 20px;">
             
-            <?php csrf_field(); ?>
+            <?php 
+            // Adiciona o campo de segurança CSRF
+            csrf_field(); 
+            ?>
             <input type="hidden" name="id" value="<?= $user['id'] ?>">
             <input type="hidden" name="company_id" value="<?= $user['company_id'] ?>">
 

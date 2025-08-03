@@ -1,7 +1,12 @@
 <?php
-require_once __DIR__ . '/../../Database/Connection.php';
 
-class PainelAdminEmpresaController
+namespace App\Http\Controllers; // <-- CORREÇÃO AQUI
+
+use App\Database\Connection;
+use PDOException;
+use Exception;
+
+class PainelAdminEmpresaController extends BaseController
 {
     /**
      * Mostra o dashboard principal do Administrador da Empresa com as métricas.
@@ -9,8 +14,7 @@ class PainelAdminEmpresaController
     public function index()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'administrador') {
-            header('Location: /login');
-            exit();
+            throw new Exception('Acesso negado.', 403);
         }
 
         try {
@@ -27,8 +31,8 @@ class PainelAdminEmpresaController
             $stmtLojas->execute([$companyId]);
             $totalLojas = $stmtLojas->fetchColumn();
 
-            // 3. Somar o valor de todos os turnos concluídos (simulação de custo)
-            $stmtValor = $pdo->prepare("SELECT SUM(company_cost) FROM shifts WHERE company_id = ? AND status = 'concluida'");
+            // 3. Somar o valor de todos os turnos concluídos
+            $stmtValor = $pdo->prepare("SELECT SUM(final_company_cost) FROM shift_applications WHERE shift_id IN (SELECT id FROM shifts WHERE company_id = ?) AND status = 'concluido'");
             $stmtValor->execute([$companyId]);
             $valorGasto = $stmtValor->fetchColumn();
 
@@ -36,18 +40,13 @@ class PainelAdminEmpresaController
             $stats = [
                 'total_vagas' => $totalVagas,
                 'lojas_ativas' => $totalLojas,
-                'valor_gasto' => $valorGasto ?? 0 // Garante 0 se for nulo
+                'valor_gasto' => $valorGasto ?? 0
             ];
 
-        } catch (\PDOException $e) {
-            // Em caso de erro, define valores padrão
-            $stats = [
-                'total_vagas' => 0,
-                'lojas_ativas' => 0,
-                'valor_gasto' => 0
-            ];
+            $this->view('empresa_admin/dashboard', ['stats' => $stats]);
+
+        } catch (PDOException $e) {
+            throw $e;
         }
-        
-        require_once __DIR__ . '/../../Views/empresa_admin/dashboard.php';
     }
 }

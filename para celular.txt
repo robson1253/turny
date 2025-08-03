@@ -1,0 +1,9 @@
+	<script>
+  if (window.innerWidth >= 768) { // Considera telas com largura igual ou superior a 768px como desktop
+    window.location.href = "/acesso-negado-desktop"; // Redireciona para uma página de aviso
+    // Ou, se preferir apenas mostrar uma mensagem na tela:
+    /*
+    document.body.innerHTML = '<div style="font-family: sans-serif; padding: 20px; text-align: center;">Esta página é otimizada para visualização em dispositivos móveis. Por favor, acesse através do seu celular.</div>';
+    */
+  }
+</script>

@@ -1,52 +1,91 @@
 <?php
 
-require_once __DIR__ . '/../../Database/Connection.php';
+namespace App\Http\Controllers;
 
-class UserController
+use App\Database\Connection;
+use PDOException;
+use Exception;
+
+// A classe agora herda do nosso BaseController
+class UserController extends BaseController
 {
+    /**
+     * Mostra a lista de utilizadores de uma empresa.
+     */
     public function index()
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+            throw new Exception('Acesso negado.', 403);
+        }
         $companyId = $_GET['company_id'] ?? null;
-        if (!$companyId) die('ID da empresa não fornecido.');
+        if (!$companyId) {
+            throw new Exception('ID da empresa não fornecido.');
+        }
 
         try {
             $pdo = Connection::getPdo();
             $stmtCompany = $pdo->prepare('SELECT nome_fantasia FROM companies WHERE id = ?');
             $stmtCompany->execute([$companyId]);
             $company = $stmtCompany->fetch();
-            if (!$company) die('Empresa não encontrada.');
+            if (!$company) {
+                throw new Exception('Empresa não encontrada.');
+            }
             $companyName = $company['nome_fantasia'];
 
-            // CORREÇÃO: Adicionamos a coluna 'status' à consulta
             $stmtUsers = $pdo->prepare('SELECT id, name, email, role, status FROM users WHERE company_id = ?');
             $stmtUsers->execute([$companyId]);
             $users = $stmtUsers->fetchAll();
 
-            require_once __DIR__ . '/../../Views/admin/listar_utilizadores.php';
-        } catch (\PDOException $e) {
-            die('Erro ao buscar os utilizadores: ' . $e->getMessage());
+            // Usa o método view() para renderizar a página, passando os dados
+            $this->view('admin/utilizadores/listar', [
+                'users' => $users,
+                'companyName' => $companyName,
+                'companyId' => $companyId
+            ]);
+
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 
+    /**
+     * Mostra o formulário de edição de um utilizador.
+     */
     public function edit()
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+            throw new Exception('Acesso negado.', 403);
+        }
         $userId = $_GET['id'] ?? null;
-        if (!$userId) die('ID do utilizador não fornecido.');
+        if (!$userId) {
+            throw new Exception('ID do utilizador não fornecido.');
+        }
 
         try {
             $pdo = Connection::getPdo();
             $stmt = $pdo->prepare('SELECT id, name, email, role, company_id FROM users WHERE id = ?');
             $stmt->execute([$userId]);
             $user = $stmt->fetch();
-            if (!$user) die('Utilizador não encontrado.');
-            require_once __DIR__ . '/../../Views/admin/editar_utilizador.php';
-        } catch (\PDOException $e) {
-            die('Erro ao buscar os dados do utilizador: ' . $e->getMessage());
+            if (!$user) {
+                throw new Exception('Utilizador não encontrado.');
+            }
+            $this->view('admin/utilizadores/editar', ['user' => $user]);
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 
+    /**
+     * Atualiza os dados de um utilizador.
+     */
     public function update()
     {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+            throw new Exception('Acesso negado.', 403);
+        }
+        // Proteção CSRF
+        verify_csrf_token();
+        
         $id = $_POST['id'] ?? null;
         $companyId = $_POST['company_id'] ?? null;
         $name = $_POST['name'] ?? '';
@@ -54,11 +93,17 @@ class UserController
         $role = $_POST['role'] ?? '';
         $password = $_POST['password'] ?? '';
 
-        if (!$id || !$companyId) die('Erro: IDs em falta.');
+        if (!$id || !$companyId) {
+            throw new Exception('IDs em falta.');
+        }
 
         try {
             $pdo = Connection::getPdo();
             if (!empty($password)) {
+                // Validação de força de senha
+                if (!preg_match('/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$/', $password)) {
+                    throw new Exception('A nova senha deve ter pelo menos 8 caracteres, incluindo um número, uma letra maiúscula e uma minúscula.');
+                }
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
                 $sql = "UPDATE users SET name = ?, email = ?, role = ?, password = ? WHERE id = ?";
                 $params = [$name, $email, $role, $passwordHash, $id];
@@ -68,10 +113,13 @@ class UserController
             }
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
+
+            // Mensagem flash para feedback
+            flash('Utilizador atualizado com sucesso!');
             header('Location: /admin/utilizadores?company_id=' . $companyId);
             exit();
-        } catch (\PDOException $e) {
-            die('Erro ao atualizar o utilizador: ' . $e->getMessage());
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 
@@ -80,29 +128,36 @@ class UserController
      */
     public function toggleStatus()
     {
-        $userId = $_GET['id'] ?? null;
-        if (!$userId) die('ID do utilizador não fornecido.');
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+            throw new Exception('Acesso negado.', 403);
+        }
+        // Proteção CSRF para uma ação que altera dados
+        verify_csrf_token();
+        $userId = $_POST['id'] ?? null; // Alterado para POST
+
+        if (!$userId) {
+            throw new Exception('ID do utilizador não fornecido.');
+        }
 
         $pdo = Connection::getPdo();
         try {
-            // Primeiro, precisamos do company_id para o redirecionamento
             $stmt = $pdo->prepare('SELECT status, company_id FROM users WHERE id = ?');
             $stmt->execute([$userId]);
             $user = $stmt->fetch();
-            if (!$user) die('Utilizador não encontrado.');
-
-            // Inverte o status
+            if (!$user) {
+                throw new Exception('Utilizador não encontrado.');
+            }
+            
             $newStatus = ($user['status'] == 1) ? 0 : 1;
-
-            // Atualiza a base de dados
+            
             $updateStmt = $pdo->prepare('UPDATE users SET status = ? WHERE id = ?');
             $updateStmt->execute([$newStatus, $userId]);
 
-            // Redireciona de volta para a lista de utilizadores da empresa correta
+            flash('Status do utilizador alterado com sucesso!');
             header('Location: /admin/utilizadores?company_id=' . $user['company_id']);
             exit();
-        } catch (\PDOException $e) {
-            die('Erro ao alterar o status do utilizador: ' . $e->getMessage());
+        } catch (PDOException $e) {
+            throw $e;
         }
     }
 }

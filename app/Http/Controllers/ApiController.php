@@ -1,33 +1,54 @@
 <?php
-require_once __DIR__ . '/../../Database/Connection.php';
 
-class ApiController
+namespace App\Http\Controllers;
+
+use App\Database\Connection;
+use PDO;
+use PDOException;
+use Exception;
+
+// A classe agora herda do nosso BaseController
+class ApiController extends BaseController
 {
+    /**
+     * Helper method to send a standardized JSON response and exit.
+     * @param mixed $data The data to encode.
+     * @param int $statusCode The HTTP status code.
+     */
+    private function jsonResponse($data, int $statusCode = 200)
+    {
+        // Limpa qualquer saída de buffer anterior para garantir uma resposta JSON limpa
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+        
+        http_response_code($statusCode);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+        exit();
+    }
+
     /**
      * Busca os dados de um CEP usando a API do ViaCEP no lado do servidor.
      */
     public function lookupCep()
     {
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
-        header('Content-Type: application/json');
-
-        $cep = $_GET['cep'] ?? '';
-        $cep = preg_replace('/[^0-9]/', '', $cep);
+        $cep = preg_replace('/[^0-9]/', '', $_GET['cep'] ?? '');
 
         if (strlen($cep) !== 8) {
-            echo json_encode(['erro' => true, 'mensagem' => 'CEP inválido.']);
-            exit();
+            $this->jsonResponse(['error' => 'CEP inválido.'], 400); // Bad Request
         }
 
         $url = "https://viacep.com.br/ws/{$cep}/json/";
         $response = @file_get_contents($url);
 
         if ($response === false) {
-            echo json_encode(['erro' => true, 'mensagem' => 'Não foi possível contactar o serviço de CEP.']);
-        } else {
-            echo $response;
+            $this->jsonResponse(['error' => 'Não foi possível contactar o serviço de CEP.'], 503); // Service Unavailable
         }
         
+        // A resposta do ViaCEP já é JSON, então apenas a retransmitimos.
+        header('Content-Type: application/json; charset=utf-8');
+        echo $response;
         exit();
     }
 
@@ -36,14 +57,9 @@ class ApiController
      */
     public function getShifts()
     {
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
         if (!isset($_SESSION['user_id']) || empty($_SESSION['company_id'])) {
-            http_response_code(403);
-            echo json_encode(['error' => 'Acesso não autorizado']);
-            exit();
+            $this->jsonResponse(['error' => 'Acesso não autorizado'], 403); // Forbidden
         }
-
-        header('Content-Type: application/json');
 
         try {
             $pdo = Connection::getPdo();
@@ -66,7 +82,7 @@ class ApiController
             $events = [];
             foreach ($shifts as $shift) {
                 $events[] = [
-                    'id'      => $shift['id'],
+                    'id'    => $shift['id'],
                     'title'   => $shift['title'] . ' (' . htmlspecialchars($shift['store_name']) . ')',
                     'start'   => $shift['shift_date'] . 'T' . $shift['start_time'],
                     'end'     => $shift['shift_date'] . 'T' . $shift['end_time'],
@@ -78,84 +94,66 @@ class ApiController
                 ];
             }
 
-            echo json_encode($events);
+            $this->jsonResponse($events);
 
-        } catch (\PDOException $e) {
-            http_response_code(500);
-            echo json_encode(['error' => 'Erro na base de dados: ' . $e->getMessage()]);
+        } catch (PDOException $e) {
+            // Lança a exceção para ser capturada pelo manipulador global.
+            throw $e;
         }
-        exit();
     }
 
     /**
-     * Verifica e retorna os horários de treinamento disponíveis para uma loja numa data específica.
+     * Verifica e retorna os horários de treinamento disponíveis.
      */
     public function getAvailableTrainingSlots()
     {
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
         if (!isset($_SESSION['operator_id'])) {
-            http_response_code(403);
-            echo json_encode(['error' => 'Acesso não autorizado']);
-            exit();
+            $this->jsonResponse(['error' => 'Acesso não autorizado'], 403);
         }
-
-        header('Content-Type: application/json');
 
         $storeId = $_GET['store_id'] ?? null;
         $date = $_GET['date'] ?? null;
 
         if (!$storeId || !$date) {
-            http_response_code(400); // Bad Request
-            echo json_encode(['error' => 'ID da loja e data são obrigatórios.']);
-            exit();
+            $this->jsonResponse(['error' => 'ID da loja e data são obrigatórios.'], 400);
         }
 
         try {
             $pdo = Connection::getPdo();
-
-            // Busca os agendamentos já existentes para esta loja e data com status relevante
+            
             $stmt = $pdo->prepare("SELECT scheduled_slot FROM training_requests WHERE store_id = ? AND scheduled_date = ? AND status IN ('solicitado', 'agendado')");
             $stmt->execute([$storeId, $date]);
             $takenSlots = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
-            // Verifica a disponibilidade (máximo de 1 por período)
             $availability = [
                 'manha' => !in_array('manha', $takenSlots),
                 'tarde' => !in_array('tarde', $takenSlots)
             ];
 
-            echo json_encode($availability);
+            $this->jsonResponse($availability);
 
-        } catch (\PDOException $e) {
-            http_response_code(500);
-            // Em vez de die(), enviamos uma resposta JSON com o erro
-            echo json_encode(['error' => 'Erro ao consultar a base de dados.']);
+        } catch (PDOException $e) {
+            throw $e;
         }
-        exit();
     }
     
     /**
-     * Busca e retorna as lojas que utilizam um sistema ERP específico, com endereço completo.
+     * Busca e retorna as lojas que utilizam um sistema ERP específico.
      */
     public function getStoresByErp()
     {
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
         if (!isset($_SESSION['operator_id'])) {
-            http_response_code(403); echo json_encode(['error' => 'Acesso não autorizado']); exit();
+            $this->jsonResponse(['error' => 'Acesso não autorizado'], 403);
         }
-
-        header('Content-Type: application/json');
 
         $erpId = $_GET['erp_id'] ?? null;
         if (!$erpId) {
-            echo json_encode(['error' => 'ID do sistema ERP é obrigatório.']);
-            exit();
+            $this->jsonResponse(['error' => 'ID do sistema ERP é obrigatório.'], 400);
         }
 
         try {
             $pdo = Connection::getPdo();
-
-            // QUERY ATUALIZADA para buscar o endereço completo
+            
             $stmt = $pdo->prepare("
                 SELECT id, name, endereco, numero, bairro, cidade, estado 
                 FROM stores 
@@ -164,12 +162,10 @@ class ApiController
             $stmt->execute([$erpId]);
             $stores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            echo json_encode($stores);
+            $this->jsonResponse($stores);
 
-        } catch (\PDOException $e) {
-            http_response_code(500);
-            echo json_encode(['error' => 'Erro na base de dados.']);
+        } catch (PDOException $e) {
+            throw $e;
         }
-        exit();
     }
 }

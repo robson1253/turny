@@ -1,11 +1,3 @@
-<?php
-if (!isset($_SESSION['operator_id'])) {
-    header('Location: /login'); exit();
-}
-if (!isset($shiftDetails)) {
-    die('Erro: Detalhes do turno não encontrados.');
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -17,9 +9,9 @@ if (!isset($shiftDetails)) {
         .star-rating { display: flex; flex-direction: row-reverse; justify-content: center; gap: 5px; margin-top: 10px; }
         .star-rating input[type="radio"] { display: none; }
         .star-rating label { font-size: 2.5em; color: #ddd; cursor: pointer; transition: color 0.2s; }
-        .star-rating:not(:hover) input[type="radio"]:checked ~ label,
-        .star-rating:hover input[type="radio"] ~ label:hover ~ label,
-        .star-rating:hover input[type="radio"] ~ label:hover { color: #ffc107; }
+        .star-rating input[type="radio"]:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label { color: #ffc107; }
     </style>
 </head>
 <body class="operador-body">
@@ -30,9 +22,14 @@ if (!isset($shiftDetails)) {
 
         <main class="operador-content">
             <p style="margin-bottom: 30px;"><a href="/painel/operador/meus-turnos">&larr; Voltar para Meus Turnos</a></p>
+            
+            <?php display_flash_message(); ?>
 
             <form action="/painel/operador/avaliar" method="POST" class="form-panel" style="border: none; box-shadow: none; padding: 0;">
+                
+                <?php csrf_field(); // <-- Token de segurança adicionado ?>
                 <input type="hidden" name="application_id" value="<?= htmlspecialchars($shiftDetails['application_id']) ?>">
+                
                 <fieldset>
                     <legend>Como foi a sua experiência?</legend>
                     <div class="info-box" style="margin-bottom: 20px;">

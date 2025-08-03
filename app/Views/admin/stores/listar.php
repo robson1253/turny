@@ -1,16 +1,17 @@
-<?php
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-    http_response_code(403); die('Acesso negado.');
-}
-if (!isset($company)) die('Erro: Dados da empresa não foram carregados.');
-if (!isset($stores)) $stores = [];
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Gerir Lojas - <?= htmlspecialchars($company['nome_fantasia']) ?></title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; vertical-align: middle; }
+        .table th { background-color: #f2f2f2; }
+        .table tr:nth-child(even){ background-color: #f9f9f9; }
+        .actions .btn { display: inline-block; margin-right: 5px; margin-bottom: 5px; text-decoration: none; }
+        .actions form { margin-bottom: 5px; }
+    </style>
 </head>
 <body>
     <div class="container" style="padding: 40px 0; max-width: 1000px;">
@@ -19,6 +20,8 @@ if (!isset($stores)) $stores = [];
             <a href="/admin/empresas">&larr; Voltar para a Lista de Empresas</a> | 
             <a href="/admin/stores/criar?company_id=<?= htmlspecialchars($company['id']) ?>" class="btn-login" style="padding: 8px 15px; font-size: 14px;">Adicionar Nova Loja</a>
         </p>
+        
+        <?php display_flash_message(); ?>
         
         <table class="table">
             <thead>
@@ -42,19 +45,19 @@ if (!isset($stores)) $stores = [];
                             <td><?= htmlspecialchars($store['cnpj'] ?? 'N/D') ?></td>
                             <td><?= htmlspecialchars($store['erp_system_name'] ?? 'Não definido') ?></td>
                             <td>
-                                <?php if ($store['status'] == 1): ?>
-                                    <span class="status-badge" style="background-color: var(--cor-sucesso);">Ativa</span>
-                                <?php else: ?>
-                                    <span class="status-badge" style="background-color: var(--cor-perigo);">Inativa</span>
-                                <?php endif; ?>
+                                <span class="status-badge status-<?= $store['status'] ? 'ativo' : 'inativo' ?>">
+                                    <?= $store['status'] ? 'Ativa' : 'Inativa' ?>
+                                </span>
                             </td>
                             <td class="actions">
-                                <a href="/admin/stores/editar?id=<?= $store['id'] ?>">Editar</a>
-                                <?php if ($store['status'] == 1): ?>
-                                    <a href="/admin/stores/toggle-status?id=<?= $store['id'] ?>" class="disable" onclick="return confirm('Tem a certeza que quer desabilitar esta loja?')">Desabilitar</a>
-                                <?php else: ?>
-                                    <a href="/admin/stores/toggle-status?id=<?= $store['id'] ?>" class="enable" onclick="return confirm('Tem a certeza que quer habilitar esta loja?')">Habilitar</a>
-                                <?php endif; ?>
+                                <a href="/admin/stores/editar?id=<?= $store['id'] ?>" class="btn edit-btn">Editar</a>
+                                <form action="/admin/stores/toggle-status" method="POST" style="display:inline;" onsubmit="return confirm('Tem a certeza que deseja alterar o status desta loja?')">
+                                    <?php csrf_field(); ?>
+                                    <input type="hidden" name="id" value="<?= $store['id'] ?>">
+                                    <button type="submit" class="btn <?= $store['status'] ? 'cancel-btn' : 'success-btn' ?>">
+                                        <?= $store['status'] ? 'Inativar' : 'Ativar' ?>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
