@@ -22,7 +22,11 @@ class PainelEmpresaController extends BaseController
      * @param array $roles Perfis permitidos para a ação.
      * @throws Exception
      */
+<<<<<<< HEAD
     protected function checkAccess (array $roles = ['gerente', 'administrador', 'recepcionista'])
+=======
+    private function checkAccess(array $roles = ['gerente', 'administrador', 'recepcionista'])
+>>>>>>> 9dd6b9090c760ad464f921722d847ee8ecc30020
     {
         if (!isset($_SESSION['user_id']) || empty($_SESSION['company_id']) || !in_array($_SESSION['user_role'], $roles)) {
             throw new Exception('Acesso negado ou sessão inválida.', 403);

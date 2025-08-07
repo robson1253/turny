@@ -188,6 +188,7 @@
 [2025-08-04 04:10:37] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
 [2025-08-04 04:10:39] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
 [2025-08-04 04:10:42] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+<<<<<<< HEAD
 [2025-08-08 01:25:17] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
 [2025-08-08 01:25:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
 [2025-08-08 01:26:38] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
@@ -216,3 +217,5 @@
 [2025-08-08 01:29:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
 [2025-08-08 01:29:17] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
 [2025-08-08 01:29:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+=======
+>>>>>>> 9dd6b9090c760ad464f921722d847ee8ecc30020
