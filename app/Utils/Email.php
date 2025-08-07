@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Utils; // <-- NAMESPACE CORRIGIDO
+namespace App\Utils;
 
-// Importa as classes do PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-class Email // <-- NOME DA CLASSE CORRIGIDO
+class Email
 {
     /**
      * Envia um e-mail.
@@ -19,26 +18,28 @@ class Email // <-- NOME DA CLASSE CORRIGIDO
      */
     public static function sendEmail(string $toEmail, string $toName, string $subject, string $body): bool
     {
-        // Cria uma nova instância do PHPMailer
         $mail = new PHPMailer(true);
 
         try {
             // --- Configurações do Servidor ---
-            // $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Descomente para depuração detalhada
+            // $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Descomente esta linha para depuração detalhada do envio
+
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
-            
-            // PREENCHA COM AS SUAS CREDENCIAIS DO GMAIL
-            $mail->Username   = 'turny2025@gmail.com'; 
-            $mail->Password   = 'uimkeynbazofzhdx'; // A senha de app que você gerou
-
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port       = 465;
             $mail->CharSet    = 'UTF-8';
 
+            // --- INÍCIO DA CORREÇÃO ---
+            // As credenciais agora são lidas de forma segura a partir das variáveis de ambiente ($_ENV).
+            // Garanta que estas variáveis estão definidas no seu arquivo .env
+            $mail->Username   = $_ENV['EMAIL_USERNAME'];
+            $mail->Password   = $_ENV['EMAIL_PASSWORD']; 
+            // --- FIM DA CORREÇÃO ---
+
             // --- Remetente e Destinatário ---
-            $mail->setFrom('SEU_EMAIL_GMAIL@gmail.com', 'TURNY Plataforma');
+            $mail->setFrom($_ENV['EMAIL_USERNAME'], 'TURNY Plataforma');
             $mail->addAddress($toEmail, $toName);
 
             // --- Conteúdo do E-mail ---
@@ -51,8 +52,10 @@ class Email // <-- NOME DA CLASSE CORRIGIDO
             return true;
 
         } catch (Exception $e) {
-            // Em produção, gravaríamos o erro num log em vez de o mostrar.
-            // echo "A mensagem não pôde ser enviada. Erro do Mailer: {$mail->ErrorInfo}";
+            // Em ambiente de produção, é crucial registar o erro em vez de o exibir.
+            // O nosso manipulador de erros global no index.php já faz isso.
+            // Lançar a exceção permite que o erro seja capturado e logado.
+            throw new Exception("Erro ao enviar e-mail: {$mail->ErrorInfo}");
             return false;
         }
     }

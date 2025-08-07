@@ -19,7 +19,11 @@ define('APP_ENV', 'development');
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../app/Utils/helpers.php';
 
-// 3. Configura o manipulador de erros global
+// 3. Carrega as variáveis de ambiente do arquivo .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+// 4. Configura o manipulador de erros global
 set_exception_handler(function($exception) {
     // Grava sempre o erro detalhado no arquivo de log
     $logMessage = "[" . date("Y-m-d H:i:s") . "] " . $exception->getMessage() . " in " . $exception->getFile() . " on line " . $exception->getLine() . "\n";
@@ -80,9 +84,6 @@ switch ($requestUri) {
         if ($requestMethod === 'POST') { $controller->registerOperator(); } 
         else { $controller->showOperatorForm(); }
         break;
-
-    // ... (O resto do seu switch case continua aqui, exatamente como estava) ...
-    // ... (Nenhuma alteração necessária do /logout em diante) ...
     
     // --- Rotas Protegidas (Autenticadas) ---
     case '/logout':
@@ -108,7 +109,7 @@ switch ($requestUri) {
         if ($requestMethod === 'POST') { (new App\Http\Controllers\EmpresaController())->update(); }
         break;
     case '/admin/empresas/toggle-status':
-        (new App\Http\Controllers\EmpresaController())->toggleStatus();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\EmpresaController())->toggleStatus(); }
         break;
     case '/admin/utilizadores':
         (new App\Http\Controllers\UserController())->index();
@@ -120,7 +121,7 @@ switch ($requestUri) {
         if ($requestMethod === 'POST') { (new App\Http\Controllers\UserController())->update(); }
         break;
     case '/admin/utilizadores/toggle-status':
-        (new App\Http\Controllers\UserController())->toggleStatus();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\UserController())->toggleStatus(); }
         break;
     case '/admin/settings':
         (new App\Http\Controllers\SettingsController())->index();
@@ -143,7 +144,7 @@ switch ($requestUri) {
         if ($requestMethod === 'POST') { (new App\Http\Controllers\OperadorController())->update(); }
         break;
     case '/admin/operadores/toggle-status':
-        (new App\Http\Controllers\OperadorController())->toggleStatus();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\OperadorController())->toggleStatus(); }
         break;
     case '/admin/operadores/verificar':
         (new App\Http\Controllers\OperadorController())->showVerificationForm();
@@ -166,7 +167,7 @@ switch ($requestUri) {
         if ($requestMethod === 'POST') { (new App\Http\Controllers\StoreController())->update(); }
         break;
     case '/admin/stores/toggle-status':
-        (new App\Http\Controllers\StoreController())->toggleStatus();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\StoreController())->toggleStatus(); }
         break;
     case '/admin/erps':
         (new App\Http\Controllers\ErpSystemController())->index();
@@ -183,25 +184,26 @@ switch ($requestUri) {
         if ($requestMethod === 'POST') { (new App\Http\Controllers\ErpSystemController())->update(); }
         break;
     case '/admin/erps/apagar':
-        (new App\Http\Controllers\ErpSystemController())->destroy();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\ErpSystemController())->destroy(); }
         break;
-	case '/admin/funcoes':
-    (new App\Http\Controllers\JobFunctionController())->index();
-		break;
-	case '/admin/funcoes/criar':
-    $controller = new App\Http\Controllers\JobFunctionController();
-    if ($requestMethod === 'POST') { $controller->store(); } 
-    else { $controller->showCreateForm(); }
-		break;
-	case '/admin/funcoes/editar':
-    (new App\Http\Controllers\JobFunctionController())->edit();
-		break;
-	case '/admin/funcoes/atualizar':
-    if ($requestMethod === 'POST') { (new App\Http\Controllers\JobFunctionController())->update(); }
-		break;
-	case '/admin/funcoes/apagar':
-    if ($requestMethod === 'POST') { (new App\Http\Controllers\JobFunctionController())->destroy(); }
-		break;
+    case '/admin/funcoes':
+        (new App\Http\Controllers\JobFunctionController())->index();
+        break;
+    case '/admin/funcoes/criar':
+        $controller = new App\Http\Controllers\JobFunctionController();
+        if ($requestMethod === 'POST') { $controller->store(); } 
+        else { $controller->showCreateForm(); }
+        break;
+    case '/admin/funcoes/editar':
+        (new App\Http\Controllers\JobFunctionController())->edit();
+        break;
+    case '/admin/funcoes/atualizar':
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\JobFunctionController())->update(); }
+        break;
+    case '/admin/funcoes/apagar':
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\JobFunctionController())->destroy(); }
+        break;
+    
     // --- Rotas dos Painéis de Empresa ---
     case '/painel/empresa':
         (new App\Http\Controllers\PainelEmpresaController())->showDashboard();
@@ -233,13 +235,13 @@ switch ($requestUri) {
         if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->updateVaga(); }
         break;
     case '/painel/vagas/cancelar':
-        (new App\Http\Controllers\PainelEmpresaController())->cancelVaga();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->cancelVaga(); }
         break;
     case '/painel/vagas/candidatos':
         (new App\Http\Controllers\PainelEmpresaController())->showApplicants();
         break;
     case '/painel/vagas/candidatos/status':
-        (new App\Http\Controllers\PainelEmpresaController())->updateApplicationStatus();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->updateApplicationStatus(); }
         break;
     case '/painel/vagas/concluir':
         if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->processShiftCompletion(); }
@@ -254,7 +256,7 @@ switch ($requestUri) {
         if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->storeWeeklyPlan(); }
         break;
     case '/painel/vagas/templates/apagar':
-        (new App\Http\Controllers\PainelEmpresaController())->deleteShiftTemplate();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->deleteShiftTemplate(); }
         break;
     case '/painel/vagas/planear':
         (new App\Http\Controllers\PainelEmpresaController())->showPlanner();
@@ -263,7 +265,7 @@ switch ($requestUri) {
         (new App\Http\Controllers\PainelEmpresaController())->listTrainingRequests();
         break;
     case '/painel/treinamentos/processar':
-        (new App\Http\Controllers\PainelEmpresaController())->processTrainingRequest();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelEmpresaController())->processTrainingRequest(); }
         break;
     
     // --- Rotas do Painel do Operador ---
@@ -277,13 +279,13 @@ switch ($requestUri) {
         if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelOperadorController())->scheduleTraining(); }
         break;
     case '/painel/operador/vagas/aceitar':
-        (new App\Http\Controllers\PainelOperadorController())->acceptShift();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelOperadorController())->acceptShift(); }
         break;
     case '/painel/operador/meus-turnos':
         (new App\Http\Controllers\PainelOperadorController())->showMyShifts();
         break;
     case '/painel/operador/meus-turnos/cancelar':
-        (new App\Http\Controllers\PainelOperadorController())->cancelApplication();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelOperadorController())->cancelApplication(); }
         break;
     case '/painel/operador/meus-turnos/transferir':
         if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelOperadorController())->initiateTransfer(); }
@@ -297,7 +299,7 @@ switch ($requestUri) {
         (new App\Http\Controllers\PainelOperadorController())->showTransferOffers();
         break;
     case '/painel/operador/ofertas/responder':
-        (new App\Http\Controllers\PainelOperadorController())->respondToTransfer();
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PainelOperadorController())->respondToTransfer(); }
         break;
     case '/painel/operador/perfil':
         (new App\Http\Controllers\PainelOperadorController())->showProfile();
@@ -320,6 +322,6 @@ switch ($requestUri) {
     // --- Rota Padrão (404) ---
     default:
         http_response_code(404);
-        echo 'Erro 404 - Página não encontrada.';
+        require __DIR__ . '/../app/Views/errors/404.php';
         break;
 }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
-    <style>
+	    <style>
         .profile-header { text-align: center; margin-bottom: 30px; }
         .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--cor-branco); box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
         .profile-avatar:hover { transform: scale(1.05); }
@@ -36,8 +36,7 @@
             background: #fff;
             padding: 15px;
             border-radius: 10px;
-            /* Ocupa 90% da largura em ecrãs pequenos, com um máximo de 500px */
-            width: 90%;
+            width: 100%;
             max-width: 500px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             animation: fadeInModal 0.3s ease-out;
@@ -87,7 +86,7 @@
 
             <div class="profile-header">
                 <img src="<?= htmlspecialchars($operator['path_selfie_thumb'] ?? $operator['path_selfie']) ?>" 
-                     " 
+                     alt="Foto de Perfil de <?= htmlspecialchars($operator['name']) ?>" 
                      class="profile-avatar imagem-clicavel"
                      data-full-image="<?= htmlspecialchars($operator['path_selfie']) ?>">
                 
@@ -97,19 +96,19 @@
             </div>
 
             <div class="profile-section">
-                <h3>Meus Emblemas (Sistemas Qualificados)</h3>
+                <h3>Minhas Qualificações</h3>
+                
+
+
+                <!-- Secção para Sistemas ERP -->
+                <h4 style="margin-top: 20px; font-size: 1em; color: #555;">Sistemas (ERP)</h4>
                 <div class="qualifications-grid">
-                    <?php 
-                        $qualificationsList = (!empty($operator['qualifications'])) ? explode(', ', $operator['qualifications']) : [];
-                    ?>
-                    <?php if (empty($qualificationsList)): ?>
-                        <p>Você ainda não possui nenhuma qualificação. <a href="/painel/operador/qualificacoes">Clique aqui</a> para solicitar.</p>
+                    <?php if (empty($erpQualifications)): ?>
+                        <p>Nenhuma qualificação de sistema. <a href="/painel/operador/qualificacoes">Solicite uma aqui</a>.</p>
                     <?php else: ?>
-                        <?php foreach ($qualificationsList as $qual): ?>
+                        <?php foreach ($erpQualifications as $qual): ?>
                             <span class="qualification-badge">
-                                <span class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"></path></svg>
-                                </span>
+                                <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"></path></svg></span>
                                 <?= htmlspecialchars($qual) ?>
                             </span>
                         <?php endforeach; ?>
@@ -138,9 +137,9 @@
                 Meus Turnos
             </a>
             <a href="/painel/operador/ofertas" class="footer-icon" style="position: relative;">
-                <?php if (isset($operator['pending_offers']) && $operator['pending_offers'] > 0): ?>
-                    <span class="notification-badge"><?= $operator['pending_offers'] ?></span>
-                <?php endif; ?>
+                 <?php if (isset($pendingOffers) && $pendingOffers > 0): ?>
+                     <span class="notification-badge"><?= htmlspecialchars($pendingOffers) ?></span>
+                 <?php endif; ?>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 17H20V12H4V17H2V12C2 10.9 2.9 10 4 10H20C21.1 10 22 10.9 22 12V17M15.5 2H8.5L7.3 5H16.7L15.5 2M18 5H6L5 7V9H19V7L18 5M12 13C13.1 13 14 13.9 14 15S13.1 17 12 17 10 16.1 10 15 10.9 13 12 13Z" /></svg>
                 Ofertas
             </a>
@@ -151,7 +150,7 @@
         </footer>
     </div>
 
-    <!-- Estrutura do Modal de Imagem (Atualizada) -->
+    <!-- Estrutura do Modal de Imagem -->
     <div id="image-modal-container" class="modal-container">
         <div class="modal-dialog" id="image-modal-dialog">
             <button class="modal-close-btn" id="close-image-modal">&times;</button>
@@ -172,7 +171,7 @@
             imagensClicaveis.forEach(img => {
                 img.addEventListener('click', function() {
                     const fullImageSrc = this.dataset.fullImage || this.src;
-                    imageModalContainer.style.display = "flex"; // Usa flex para mostrar
+                    imageModalContainer.style.display = "flex"; // Usa flex para mostrar e centralizar
                     modalImg.src = fullImageSrc;
                     legenda.textContent = this.alt || '';
                 });

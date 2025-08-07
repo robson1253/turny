@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
         closeModal();
     });
 
-    // --- INÍCIO DA CORREÇÃO DO SUBMIT ---
+    // --- INÍCIO DA CORREÇÃO FINAL DO SUBMIT ---
     weekPlannerForm.addEventListener('submit', function (e) {
         e.preventDefault();
         
@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Nenhum turno foi adicionado ao planeamento. Clique em "+ Adicionar Turnos" nos dias desejados para criar as vagas.');
         }
     });
-    // --- FIM DA CORREÇÃO DO SUBMIT ---
+    // --- FIM DA CORREÇÃO FINAL DO SUBMIT ---
 
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
     if (modalContainer) modalContainer.addEventListener('click', (e) => { if(e.target === modalContainer) closeModal(); });

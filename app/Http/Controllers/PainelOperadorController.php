@@ -203,12 +203,12 @@ class PainelOperadorController extends BaseController
             $pdo->commit();
 
             if ($operator) {
-                $subject = "Vaga Aceite! Detalhes do seu próximo turno na TURNY.";
+                $subject = "Vaga Aceita! Detalhes do seu próximo turno na TURNY.";
                 $body = "<h1>Parabéns, ".htmlspecialchars($operator['name'])."!</h1><p>Você aceitou a vaga e já está confirmado! Acesse 'Meus Turnos' para ver os detalhes.</p><p><strong>Equipe TURNY</strong></p>";
                 Email::sendEmail($operator['email'], $operator['name'], $subject, $body);
             }
 
-            flash('Vaga aceite com sucesso! Pode vê-la em "Meus Turnos".');
+            flash('Vaga aceita com sucesso! Pode vê-la em "Meus Turnos".');
             header('Location: /painel/operador');
             exit();
         } catch (PDOException $e) {
@@ -315,20 +315,43 @@ class PainelOperadorController extends BaseController
         try {
             $pdo = Connection::getPdo();
             $operatorId = $_SESSION['operator_id'];
+
+            // 1. Busca os dados principais do operador
             $stmtOperator = $pdo->prepare("SELECT * FROM operators WHERE id = ?");
             $stmtOperator->execute([$operatorId]);
             $operator = $stmtOperator->fetch();
-            if (!$operator) throw new Exception('Operador não encontrado.');
-            
-            $stmtQualifications = $pdo->prepare("SELECT es.name FROM operator_qualifications oq JOIN erp_systems es ON oq.erp_system_id = es.id WHERE oq.operator_id = ?");
-            $stmtQualifications->execute([$operatorId]);
-            $qualifications = $stmtQualifications->fetchAll(PDO::FETCH_COLUMN, 0);
-            
+            if (!$operator) {
+                throw new Exception('Operador não encontrado.');
+            }
+
+            // 2. Busca as qualificações de SISTEMA (ERP)
+            $stmtErpQualifications = $pdo->prepare("
+                SELECT es.name 
+                FROM operator_qualifications oq
+                JOIN erp_systems es ON oq.erp_system_id = es.id
+                WHERE oq.operator_id = ?
+            ");
+            $stmtErpQualifications->execute([$operatorId]);
+            $erpQualifications = $stmtErpQualifications->fetchAll(PDO::FETCH_COLUMN, 0);
+
+            // 3. Busca as qualificações de FUNÇÃO
+            $stmtJobQualifications = $pdo->prepare("
+                SELECT jf.name 
+                FROM operator_job_qualifications ojq
+                JOIN job_functions jf ON ojq.job_function_id = jf.id
+                WHERE ojq.operator_id = ?
+            ");
+            $stmtJobQualifications->execute([$operatorId]);
+            $jobQualifications = $stmtJobQualifications->fetchAll(PDO::FETCH_COLUMN, 0);
+
+            // 4. Busca as ofertas pendentes
             $stmtOffers = $pdo->prepare("SELECT COUNT(*) FROM shift_transfers WHERE to_operator_id = ? AND status = 'pendente'");
             $stmtOffers->execute([$operatorId]);
             $pendingOffers = $stmtOffers->fetchColumn();
             
-            $this->view('operador/perfil', compact('operator', 'qualifications', 'pendingOffers'));
+            // 5. Envia todos os dados para a view
+            $this->view('operador/perfil', compact('operator', 'erpQualifications', 'jobQualifications', 'pendingOffers'));
+
         } catch (PDOException $e) {
             throw $e;
         }

@@ -30,7 +30,7 @@
         .input-group-text { background-color: #e9ecef; border: 1px solid #ced4da; padding: 0 12px; border-radius: 8px 0 0 8px; font-weight: bold; height: 48px; box-sizing: border-box; }
         .input-group-prepend + input { border-radius: 0 8px 8px 0; }
         
-        /* Estilos para as mensagens flash */
+        /* Estilos para mensagens flash */
         .flash-message { border-radius: 8px; padding: 15px; margin-bottom: 20px; font-size: 14px; font-weight: bold; text-align: left; }
         .flash-message.error { background-color: #fce4e4; color: #c62828; border: 1px solid #c62828; }
         .flash-message.success { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #2e7d32; }
@@ -194,6 +194,7 @@
                     // Mostra a mensagem de erro sem usar alert()
                     errorMessageContainer.textContent = 'Por favor, preencha todos os campos obrigatórios deste passo.';
                     errorMessageContainer.style.display = 'block';
+                    errorMessageContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
                 return allValid;
             }
@@ -208,23 +209,7 @@
 
             function updateProgressBar() {
                 progressSteps.forEach((step, index) => {
-                    if (index < currentStep) {
-                        step.classList.add('active');
-                    } else if (index === currentStep) {
-                        step.classList.add('active');
-                    } else {
-                        step.classList.remove('active');
-                    }
-                });
-
-                // Lógica para as linhas de progresso
-                const activeSteps = document.querySelectorAll('.progress-step.active');
-                progressSteps.forEach((step, index) => {
-                    if(index < activeSteps.length -1) {
-                        step.classList.add('completed');
-                    } else {
-                        step.classList.remove('completed');
-                    }
+                    step.classList.toggle('active', index <= currentStep);
                 });
             }
         });

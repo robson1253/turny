@@ -27,7 +27,7 @@
 
             <form action="/painel/operador/avaliar" method="POST" class="form-panel" style="border: none; box-shadow: none; padding: 0;">
                 
-                <?php csrf_field(); // <-- Token de segurança adicionado ?>
+                <?php csrf_field(); ?>
                 <input type="hidden" name="application_id" value="<?= htmlspecialchars($shiftDetails['application_id']) ?>">
                 
                 <fieldset>

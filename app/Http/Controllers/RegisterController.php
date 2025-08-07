@@ -114,10 +114,15 @@ class RegisterController extends BaseController
         try {
             $pdo = Connection::getPdo();
             
+            // Verifica se os dados já existem e, se sim, redireciona com uma mensagem amigável.
             $stmtCheck = $pdo->prepare("SELECT id FROM operators WHERE username = ? OR email = ? OR cpf = ?");
             $stmtCheck->execute([$username, $email, $cpf]);
             if ($stmtCheck->fetch()) {
-                throw new Exception('O @username, E-mail ou CPF fornecido já está registado na plataforma.');
+                // Usa a nossa função flash para criar uma mensagem de erro amigável
+                flash('O @username, E-mail ou CPF fornecido já está registado na plataforma. Por favor, tente outros dados ou faça login se já tiver uma conta.', 'error');
+                // Redireciona o utilizador de volta para o formulário de registo
+                header('Location: /registro/operador');
+                exit();
             }
 
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);

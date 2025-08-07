@@ -1,12 +1,3 @@
-<?php
-// A verificação de sessão já é feita no helpers.php, mas não faz mal mantê-la aqui.
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Verifica se há uma mensagem de sucesso de registo na URL
-$registerSuccess = isset($_GET['status']) && $_GET['status'] === 'register_success';
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -23,6 +14,7 @@ $registerSuccess = isset($_GET['status']) && $_GET['status'] === 'register_succe
             font-size: 14px;
             font-weight: bold;
             text-align: left;
+            border: 1px solid transparent;
         }
         .flash-message.error {
             background-color: #fce4e4;
@@ -39,14 +31,11 @@ $registerSuccess = isset($_GET['status']) && $_GET['status'] === 'register_succe
 <body class="login-body">
 
     <div class="login-container">
-        <?php if ($registerSuccess): ?>
-            <div class="flash-message success">
-                Registo concluído com sucesso! A sua conta está em análise. Será notificado por e-mail assim que for aprovada.
-            </div>
-        <?php endif; ?>
-
         <?php 
-        // 1. Exibe a mensagem flash de erro (se existir) e depois a apaga.
+        // Esta única função agora exibe TODAS as mensagens:
+        // - Sucesso após o registo
+        // - Erro de login inválido
+        // - Qualquer outra mensagem que o sistema precise de mostrar aqui.
         display_flash_message(); 
         ?>
 
@@ -56,7 +45,7 @@ $registerSuccess = isset($_GET['status']) && $_GET['status'] === 'register_succe
         
         <form action="/login" method="POST">
             <?php 
-            // 2. Adiciona o campo CSRF oculto e obrigatório ao formulário.
+            // Adiciona o campo CSRF oculto e obrigatório ao formulário.
             csrf_field(); 
             ?>
             <div class="form-group">

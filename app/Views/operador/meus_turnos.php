@@ -109,7 +109,6 @@
             </div>
         </main>
 
-        <!-- === INÍCIO DO CÓDIGO DO RODAPÉ RESTAURADO === -->
         <footer class="operador-footer">
             <a href="/painel/operador" class="footer-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
@@ -121,7 +120,7 @@
             </a>
             <a href="/painel/operador/ofertas" class="footer-icon" style="position: relative;">
                 <?php if (isset($pendingOffers) && $pendingOffers > 0): ?>
-                    <span class="notification-badge"><?= $pendingOffers ?></span>
+                    <span class="notification-badge"><?= htmlspecialchars($pendingOffers) ?></span>
                 <?php endif; ?>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 17H20V12H4V17H2V12C2 10.9 2.9 10 4 10H20C21.1 10 22 10.9 22 12V17M15.5 2H8.5L7.3 5H16.7L15.5 2M18 5H6L5 7V9H19V7L18 5M12 13C13.1 13 14 13.9 14 15S13.1 17 12 17 10 16.1 10 15 10.9 13 12 13Z" /></svg>
                 Ofertas
@@ -131,7 +130,6 @@
                 Perfil
             </a>
         </footer>
-        <!-- === FIM DO CÓDIGO DO RODAPÉ RESTAURADO === -->
     </div>
     
     <!-- Modal de Transferência -->

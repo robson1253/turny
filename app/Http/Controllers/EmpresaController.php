@@ -6,6 +6,7 @@ use App\Database\Connection;
 use PDOException;
 use Exception;
 
+// A classe já herda corretamente do BaseController
 class EmpresaController extends BaseController
 {
     /**
@@ -13,9 +14,9 @@ class EmpresaController extends BaseController
      */
     public function index()
     {
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            throw new Exception('Acesso negado.', 403);
-        }
+        // A verificação de segurança agora é uma única linha!
+        $this->checkAccess(['admin']);
+        
         try {
             $pdo = Connection::getPdo();
             $stmt = $pdo->query('SELECT id, razao_social, nome_fantasia, status FROM companies ORDER BY created_at DESC');
@@ -33,9 +34,7 @@ class EmpresaController extends BaseController
      */
     public function edit()
     {
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            throw new Exception('Acesso negado.', 403);
-        }
+        $this->checkAccess(['admin']);
         $id = $_GET['id'] ?? null;
         if (!$id) {
             throw new Exception('ID da empresa não fornecido.');
@@ -59,9 +58,7 @@ class EmpresaController extends BaseController
      */
     public function update()
     {
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            throw new Exception('Acesso negado.', 403);
-        }
+        $this->checkAccess(['admin']);
         verify_csrf_token();
 
         $id = $_POST['id'] ?? null;
@@ -95,9 +92,7 @@ class EmpresaController extends BaseController
      */
     public function showCreateForm()
     {
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            throw new Exception('Acesso negado.', 403);
-        }
+        $this->checkAccess(['admin']);
         $this->view('admin/empresas/criar_empresa');
     }
 
@@ -106,9 +101,7 @@ class EmpresaController extends BaseController
      */
     public function store()
     {
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            throw new Exception('Acesso negado.', 403);
-        }
+        $this->checkAccess(['admin']);
         verify_csrf_token();
         
         $razao_social = $_POST['razao_social'] ?? '';
@@ -120,7 +113,6 @@ class EmpresaController extends BaseController
         if(empty($razao_social) || empty($nome_fantasia)) {
             throw new Exception('Razão Social e Nome Fantasia são obrigatórios.');
         }
-        // Validação básica de senhas
         if(empty($_POST['admin_password']) || empty($_POST['manager_password']) || empty($_POST['receptionist_password'])) {
             throw new Exception('Todas as senhas dos utilizadores são obrigatórias.');
         }
@@ -156,10 +148,7 @@ class EmpresaController extends BaseController
      */
     public function toggleStatus() 
     {
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            throw new Exception('Acesso negado.', 403);
-        }
-        // Ação POST segura com CSRF
+        $this->checkAccess(['admin']);
         verify_csrf_token();
         $id = $_POST['id'] ?? null;
 
