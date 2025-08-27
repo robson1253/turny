@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Database\Connection;
 use PDO;
-use PDOException;
 use Exception;
+use Throwable;
 
 class SettingsController extends BaseController
 {
@@ -21,67 +21,75 @@ class SettingsController extends BaseController
         try {
             $pdo = Connection::getPdo();
             
-            // 1. Busca as configurações gerais
             $stmtSettings = $pdo->query("SELECT setting_key, setting_value FROM settings");
             $settings = $stmtSettings->fetchAll(PDO::FETCH_KEY_PAIR);
             
-            // 2. Busca todas as funções de trabalho para editar os seus valores
-            $jobFunctions = $pdo->query("SELECT id, name, hourly_rate FROM job_functions ORDER BY name ASC")->fetchAll();
+            // Busca todas as colunas necessárias da tabela de funções
+            $jobFunctions = $pdo->query("SELECT id, name, hourly_rate, max_hours FROM job_functions ORDER BY name ASC")->fetchAll();
             
-            // 3. Passa ambos os conjuntos de dados para a view
             $this->view('admin/settings/index', [
                 'settings' => $settings,
                 'jobFunctions' => $jobFunctions
             ]);
 
-        } catch (PDOException $e) {
+        } catch (Throwable $e) {
             throw $e;
         }
     }
 
     /**
-     * Atualiza as configurações na base de dados.
+     * Atualiza as configurações nas tabelas settings e job_functions.
      */
     public function update()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
             throw new Exception('Acesso negado.', 403);
         }
-        verify_csrf_token();
+        \verify_csrf_token();
 
         $settings = $_POST['settings'] ?? [];
         $functions = $_POST['functions'] ?? [];
 
+        $pdo = Connection::getPdo();
         try {
-            $pdo = Connection::getPdo();
             $pdo->beginTransaction();
 
-            // 1. Atualiza as configurações gerais (taxa, bónus)
+            // 1. Atualiza as configurações gerais (taxa, bónus) na tabela 'settings'
             $sqlSettings = "UPDATE settings SET setting_value = ? WHERE setting_key = ?";
             $stmtSettings = $pdo->prepare($sqlSettings);
             foreach ($settings as $key => $value) {
-                // Sanitiza o valor monetário antes de salvar
-                $cleanValue = str_replace(['.', ','], ['', '.'], $value);
+                // Sanitiza o valor monetário (aceita vírgula e ponto como decimal)
+                $cleanValue = preg_replace('/[^\d,.]/', '', $value);
+                $cleanValue = str_replace('.', '', $cleanValue);
+                $cleanValue = str_replace(',', '.', $cleanValue);
                 $stmtSettings->execute([$cleanValue, $key]);
             }
 
-            // 2. Atualiza os valores por hora de cada função
-            $sqlFunctions = "UPDATE job_functions SET hourly_rate = ? WHERE id = ?";
+            // 2. Atualiza os valores por hora e máx. de horas na tabela 'job_functions'
+            $sqlFunctions = "UPDATE job_functions SET hourly_rate = ?, max_hours = ? WHERE id = ?";
             $stmtFunctions = $pdo->prepare($sqlFunctions);
-            foreach ($functions as $id => $rate) {
-                // Sanitiza o valor monetário antes de salvar
-                $cleanRate = str_replace(['.', ','], ['', '.'], $rate);
-                $stmtFunctions->execute([$cleanRate, $id]);
+            
+            foreach ($functions as $id => $values) {
+                // Sanitiza os valores antes de salvar
+                $cleanRate = preg_replace('/[^\d,.]/', '', $values['hourly_rate'] ?? '0');
+                $cleanRate = str_replace('.', '', $cleanRate);
+                $cleanRate = str_replace(',', '.', $cleanRate);
+                
+                $cleanMaxHours = (float) ($values['max_hours'] ?? 7.00);
+
+                $stmtFunctions->execute([(float)$cleanRate, $cleanMaxHours, $id]);
             }
 
             $pdo->commit();
 
-            flash('Configurações guardadas com sucesso!');
+            \flash('Configurações guardadas com sucesso!', 'success');
             header('Location: /admin/settings');
             exit();
 
-        } catch (PDOException $e) {
-            $pdo->rollBack();
+        } catch (Throwable $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             throw $e;
         }
     }

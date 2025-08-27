@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Database\Connection;
 use PDOException;
+use Throwable; // Adicionado para consistência
 
-// 1. A classe agora HERDA do nosso novo BaseController
 class AuthController extends BaseController 
 {
     /**
@@ -13,8 +13,6 @@ class AuthController extends BaseController
      */
     public function showLoginForm() 
     {
-        // 2. Usa o método view() do BaseController para renderizar a página
-        // A view 'login.php' será responsável por chamar as funções do helpers.php
         $this->view('login');
     }
 
@@ -23,8 +21,7 @@ class AuthController extends BaseController
      */
     public function processLogin() 
     {
-        // 3. VERIFICA O TOKEN CSRF no início de qualquer ação POST
-        verify_csrf_token();
+        \verify_csrf_token();
 
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -44,13 +41,11 @@ class AuthController extends BaseController
 
             if ($user && password_verify($password, $user['password'])) {
                 if ($user['status'] == 0) {
-                    // 4. USA A FUNÇÃO FLASH para mensagens de erro
-                    flash('Esta conta de utilizador está desabilitada.', 'error');
+                    \flash('Esta conta de utilizador está desabilitada.', 'error');
                     header('Location: /login');
                     exit();
                 }
                 
-                // 5. REGENERA O ID DA SESSÃO para prevenir ataques de fixação de sessão
                 session_regenerate_id(true);
 
                 $_SESSION['user_id'] = $user['id'];
@@ -80,12 +75,17 @@ class AuthController extends BaseController
                 $_SESSION['operator_id'] = $operator['id'];
                 $_SESSION['user_name'] = $operator['name'];
                 $_SESSION['user_role'] = 'operador';
+                
+                // --- ATUALIZAÇÃO IMPORTANTE AQUI ---
+                // Salva o caminho da foto do operador na sessão
+                $_SESSION['operator_thumb'] = $operator['path_selfie_thumb'];
+                // --- FIM DA ATUALIZAÇÃO ---
 
                 switch ($operator['status']) {
                     case 'ativo': header('Location: /painel/operador'); break;
                     case 'documentos_aprovados': header('Location: /painel/operador/qualificacoes'); break;
                     default:
-                        flash('A sua conta de operador ainda não está ativa ou foi desabilitada.', 'error');
+                        \flash('A sua conta de operador ainda não está ativa ou foi desabilitada.', 'error');
                         header('Location: /login');
                         break;
                 }
@@ -93,12 +93,12 @@ class AuthController extends BaseController
             }
 
             // Se chegou até aqui, o login falhou
-            flash('E-mail ou senha inválidos.', 'error');
+            \flash('E-mail ou senha inválidos.', 'error');
             header('Location: /login');
             exit();
 
         } catch (PDOException $e) {
-            // 6. LANÇA A EXCEÇÃO para ser capturada pelo manipulador global
+            // Lança a exceção para ser capturada pelo manipulador global
             throw $e;
         }
     }

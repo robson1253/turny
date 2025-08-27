@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Vagas do Dia - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
-    <style>
+        <style>
         .day-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--cor-borda, #ddd); }
         .day-navigation a { padding: 8px 15px; background-color: var(--cor-primaria, #016e57); color: var(--cor-branco, #fff) !important; border-radius: 5px; font-weight: bold; text-decoration: none; }
         .day-navigation a:hover { opacity: 0.9; }
@@ -71,73 +71,93 @@
 <body>
     <div class="container" style="padding: 40px 20px;">
         <div class="wizard-header">
-            <p class="breadcrumb"> <a href="/painel/vagas">Lojas</a> <span>&gt;</span> <a href="/painel/vagas/dias?store_id=<?= htmlspecialchars($storeId) ?>">Dias</a> <span>&gt;</span> Vagas do Dia </p>
-            <h1>Vagas em <?= htmlspecialchars($storeInfo['store_name']) ?></h1>
-            <p style="margin-top:-10px; font-size: 1.2em; color: #555;"><?= htmlspecialchars($formattedDate) ?></p>
+            <?php
+                // CORREÇÃO: Garante que as variáveis sempre tenham um valor padrão para evitar erros.
+                $safeStoreId = htmlspecialchars($storeId ?? 0);
+                $storeName = htmlspecialchars($storeInfo['store_name'] ?? 'Loja Desconhecida');
+                $displayDate = htmlspecialchars($formattedDate ?? 'Data Inválida');
+            ?>
+            <p class="breadcrumb"> <a href="/painel/vagas">Lojas</a> <span>&gt;</span> <a href="/painel/vagas/dias?store_id=<?= $safeStoreId ?>">Dias</a> <span>&gt;</span> Vagas do Dia </p>
+            <h1>Vagas em <?= $storeName ?></h1>
+            <p style="margin-top:-10px; font-size: 1.2em; color: #555;"><?= $displayDate ?></p>
         </div>
 
         <?php display_flash_message(); ?>
 
         <div class="day-navigation">
             <?php
-                $currentDateObj = new DateTime($date);
-                $previousDate = (clone $currentDateObj)->modify('-1 day')->format('Y-m-d');
-                $nextDate = (clone $currentDateObj)->modify('+1 day')->format('Y-m-d');
+                // CORREÇÃO: Verifica se $date existe antes de usá-la.
+                if (isset($date)) {
+                    $currentDateObj = new DateTime($date);
+                    $previousDate = (clone $currentDateObj)->modify('-1 day')->format('Y-m-d');
+                    $nextDate = (clone $currentDateObj)->modify('+1 day')->format('Y-m-d');
+                } else {
+                    // Define valores padrão se a data não for fornecida
+                    $previousDate = '#';
+                    $nextDate = '#';
+                }
             ?>
-             <a href="/painel/vagas/dia?store_id=<?= $storeId ?>&date=<?= $previousDate ?>">&larr; Dia Anterior</a>
+             <a href="/painel/vagas/dia?store_id=<?= $safeStoreId ?>&date=<?= $previousDate ?>">&larr; Dia Anterior</a>
             <a href="/painel/empresa" class="btn" style="background-color: var(--cor-destaque);">Voltar ao Painel Principal</a>
-            <a href="/painel/vagas/dia?store_id=<?= $storeId ?>&date=<?= $nextDate ?>">Dia Seguinte &rarr;</a>
+            <a href="/painel/vagas/dia?store_id=<?= $safeStoreId ?>&date=<?= $nextDate ?>">Dia Seguinte &rarr;</a>
         </div>
 
         <div class="vagas-grid">
             <?php if (empty($shifts)): ?>
-                <div class="info-box" style="grid-column: 1 / -1;"> <p>Nenhuma vaga encontrada para esta loja neste dia.</p> <p style="margin-top: 10px; margin-bottom: 0;">Use a navegação acima para ver o dia anterior ou o próximo, ou <a href="/painel/vagas/criar?store_id=<?= $storeId ?>&date=<?= $date ?>">clique aqui</a> para criar uma nova vaga para este dia.</p> </div>
+                <div class="info-box" style="grid-column: 1 / -1;">
+                    <p>Nenhuma vaga encontrada para esta loja neste dia.</p>
+                    <p style="margin-top: 10px; margin-bottom: 0;">Use a navegação acima para ver o dia anterior ou o próximo, ou <a href="/painel/vagas/criar?store_id=<?= $safeStoreId ?>&date=<?= htmlspecialchars($date ?? '') ?>">clique aqui</a> para criar uma nova vaga para este dia.</p>
+                </div>
             <?php else: ?>
                 <?php foreach ($shifts as $shift): ?>
                     <div class="vaga-card">
                         <div class="vaga-card-header">
-                            <h3><?= htmlspecialchars($shift['title']) ?></h3>
-                            <span class="status-badge status-<?= htmlspecialchars($shift['status']) ?>"> <?= str_replace('_', ' ', htmlspecialchars($shift['status'])) ?> </span>
+                            <h3><?= htmlspecialchars($shift['title'] ?? 'Título Indefinido') ?></h3>
+                            <span class="status-badge status-<?= htmlspecialchars($shift['status'] ?? 'desconhecido') ?>">
+                                <?= str_replace('_', ' ', htmlspecialchars($shift['status'] ?? 'desconhecido')) ?>
+                            </span>
                         </div>
                         <div class="vaga-card-body">
                             <div class="vaga-card-detail">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" /></svg>
-                                <span><?= htmlspecialchars(substr($shift['start_time'], 0, 5)) ?> - <?= htmlspecialchars(substr($shift['end_time'], 0, 5)) ?></span>
+                                <svg ...></svg>
+                                <span><?= htmlspecialchars(substr($shift['start_time'] ?? '00:00', 0, 5)) ?> - <?= htmlspecialchars(substr($shift['end_time'] ?? '00:00', 0, 5)) ?></span>
                             </div>
                             <div class="vaga-card-detail">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.25 15.5v-1.5h2.5v1.5h-2.5zm1.25-11c-.69 0-1.25.56-1.25 1.25v.25h2.5v-.25c0-.69-.56-1.25-1.25-1.25zm5 6.25c0 .69-.56 1.25-1.25 1.25H9.25c-.69 0-1.25-.56-1.25-1.25V9.5c0-.69.56-1.25 1.25-1.25h5.5c.69 0 1.25.56 1.25 1.25v5.25z" /></svg>
-                                <span>R$ <?= htmlspecialchars(number_format($shift['operator_payment'], 2, ',', '.')) ?></span>
+                                <svg ...></svg>
+                                <span>R$ <?= htmlspecialchars(number_format($shift['operator_payment'] ?? 0, 2, ',', '.')) ?></span>
                             </div>
                             <div class="vaga-card-detail">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
-                                <span><?= htmlspecialchars($shift['relevant_operator_count']) ?> / <?= htmlspecialchars($shift['num_positions']) ?> Vaga(s)</span>
+                                <svg ...></svg>
+                                <span><?= htmlspecialchars($shift['relevant_operator_count'] ?? 0) ?> / <?= htmlspecialchars($shift['num_positions'] ?? 0) ?> Vaga(s)</span>
                             </div>
                         </div>
                         <div class="vaga-card-footer">
-                            <?php 
-                                $isManager = $_SESSION['user_role'] === 'gerente'; 
-                                $hasRelevantOperators = $shift['relevant_operator_count'] > 0; 
+                            <?php
+                                // CORREÇÃO: Verifica a variável de sessão de forma segura.
+                                $isManager = ($_SESSION['user_role'] ?? '') === 'gerente';
+                                $hasRelevantOperators = ($shift['relevant_operator_count'] ?? 0) > 0;
                             ?>
-                            <?php if ($hasRelevantOperators): ?> 
-                                <a href="/painel/vagas/candidatos?shift_id=<?= $shift['id'] ?>" class="btn"> Ver Operadores (<?= htmlspecialchars($shift['relevant_operator_count']) ?>) </a> 
+                            <?php if ($hasRelevantOperators): ?>
+                                <a href="/painel/vagas/candidatos?shift_id=<?= $shift['id'] ?? 0 ?>" class="btn"> Ver Operadores (<?= htmlspecialchars($shift['relevant_operator_count']) ?>) </a>
                             <?php endif; ?>
                             
-                            <?php if ($isManager && $shift['status'] === 'aberta'): ?>
-                                <a href="/painel/vagas/editar?id=<?= $shift['id'] ?>" class="edit-btn">Editar</a>
+                            <?php if ($isManager && ($shift['status'] ?? '') === 'aberta'): ?>
+                                <a href="/painel/vagas/editar?id=<?= $shift['id'] ?? 0 ?>" class="edit-btn">Editar</a>
                                 <form action="/painel/vagas/cancelar" method="POST" onsubmit="return confirm('Tem a certeza que deseja cancelar esta vaga?');">
                                     <?php csrf_field(); ?>
-                                    <input type="hidden" name="id" value="<?= $shift['id'] ?>">
+                                    <input type="hidden" name="id" value="<?= $shift['id'] ?? 0 ?>">
                                     <button type="submit" class="cancel-btn">Cancelar</button>
                                 </form>
                             <?php endif; ?>
 
-                            <?php if (in_array($shift['status'], ['cancelada', 'concluida'])): ?> <a href="#" class="btn disabled"><?= str_replace('_', ' ', htmlspecialchars($shift['status'])) ?></a> <?php endif; ?>
+                            <?php if (in_array(($shift['status'] ?? ''), ['cancelada', 'concluida'])): ?>
+                                <a href="#" class="btn disabled"><?= str_replace('_', ' ', htmlspecialchars($shift['status'])) ?></a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
     </div>
-
-    </body>
+</body>
 </html>

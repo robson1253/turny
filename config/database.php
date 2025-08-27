@@ -1,13 +1,14 @@
 <?php
 
-// Ficheiro: config/database.php
-// Guarda as credenciais de acesso à base de dados.
+// Arquivo: config/database.php
+
+use App\Core\Config;
 
 return [
-    'host' => '127.0.0.1',       // ou 'localhost'
-    'port' => '3306',
-    'dbname' => 'turny_db',      // O nome que demos à nossa base de dados
-    'user' => 'root',           // O utilizador padrão do XAMPP
-    'password' => '',           // A senha padrão do XAMPP é vazia
-    'charset' => 'utf8mb4'
+    'host'      => Config::get('DB_HOST'),
+    'port'      => Config::get('DB_PORT'),
+    'database'  => Config::get('DB_DATABASE'),
+    'username'  => Config::get('DB_USERNAME'),
+    'password'  => Config::get('DB_PASSWORD'),
+    'charset'   => 'utf8mb4'
 ];

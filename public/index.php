@@ -16,8 +16,10 @@ if (session_status() === PHP_SESSION_NONE) {
 define('APP_ENV', 'development');
 
 // 2. Carrega o autoloader do Composer e as nossas funções auxiliares
+require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../app/Utils/helpers.php';
+
 
 // 3. Carrega as variáveis de ambiente do arquivo .env
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
@@ -152,6 +154,15 @@ switch ($requestUri) {
     case '/admin/operadores/processar-verificacao':
         if ($requestMethod === 'POST') { (new App\Http\Controllers\OperadorController())->processVerification(); }
         break;
+		
+	case '/painel/operador/pagamento-sucesso':
+    (new App\Http\Controllers\PainelOperadorController())->showPaymentSuccessPage();
+		break;
+		
+	case '/painel/operador/comprovante':
+    (new App\Http\Controllers\PainelOperadorController())->showReceipt();
+		break;
+		
     case '/admin/stores':
         (new App\Http\Controllers\StoreController())->index();
         break;
@@ -208,9 +219,45 @@ switch ($requestUri) {
     case '/painel/empresa':
         (new App\Http\Controllers\PainelEmpresaController())->showDashboard();
         break;
+		
+	case '/painel/empresa/operadores':
+    (new App\Http\Controllers\PainelEmpresaController())->showQualifiedOperators();
+		break;
+	
+	case '/empresa/operadores/bloquear':
+    if ($requestMethod === 'POST') {
+        // Verifique se aqui está com BARRA INVERTIDA
+        (new App\Http\Controllers\CompanyOperatorController())->block();
+    }
+		break;
+
+	case '/empresa/operadores/desbloquear':
+    if ($requestMethod === 'POST') {
+        // Verifique se aqui está com BARRA INVERTIDA
+        (new App\Http\Controllers\CompanyOperatorController())->unblock();
+    }
+		break;
+	
     case '/painel/empresa-admin':
         (new App\Http\Controllers\PainelAdminEmpresaController())->index();
         break;
+		
+	case '/painel/empresa/receber':
+    (new App\Http\Controllers\PainelEmpresaController())->showReceivePaymentForm();
+		break;
+
+
+    case '/api/pagamentos/gerar-qr':
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PaymentController())->generateQrCode(); }
+        break; 
+    case '/api/pagamentos/consumir-qr':
+        if ($requestMethod === 'POST') { (new App\Http\Controllers\PaymentController())->consumeQrCode(); }
+        break;
+    case '/api/pagamentos/status':
+        // CORREÇÃO APLICADA AQUI
+        (new App\Http\Controllers\PaymentController())->getPaymentStatus();
+        break;
+		
     case '/painel/vagas':
         (new App\Http\Controllers\PainelEmpresaController())->indexVagas();
         break;
@@ -304,7 +351,20 @@ switch ($requestUri) {
     case '/painel/operador/perfil':
         (new App\Http\Controllers\PainelOperadorController())->showProfile();
         break;
+		
+	case '/painel/operador/carteira':
+    (new App\Http\Controllers\PainelOperadorController())->showWallet();
+		break;
+	case '/painel/operador/pagar':
+    (new App\Http\Controllers\PainelOperadorController())->showPaymentPage();
+		break;
 
+// Rota de API para PROCESSAR o pagamento escaneado
+	case '/api/pagamentos/consumir-qr':
+    if ($requestMethod === 'POST') {
+        (new App\Http\Controllers\PaymentController())->consumeQrCode();
+    }
+		break;
     // --- Rotas de API (para o JavaScript) ---
     case '/api/cep-lookup':
         (new App\Http\Controllers\ApiController())->lookupCep();
@@ -318,6 +378,7 @@ switch ($requestUri) {
     case '/api/stores-by-erp':
         (new App\Http\Controllers\ApiController())->getStoresByErp();
         break;
+
 
     // --- Rota Padrão (404) ---
     default:

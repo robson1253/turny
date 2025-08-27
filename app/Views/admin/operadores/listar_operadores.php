@@ -2,7 +2,8 @@
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
     http_response_code(403); die('Acesso negado.');
 }
-if(!isset($operators)) {
+// Garante que a variável $operators exista para evitar erros na View
+if (!isset($operators)) {
     $operators = [];
 }
 ?>
@@ -13,8 +14,7 @@ if(!isset($operators)) {
     <title>Listar Operadores - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* Estilos para as etiquetas de status (movidos para o style.css principal) */
-        /* Mantemos aqui por referência, mas o ideal é que esteja no ficheiro central */
+        /* Estilos para as etiquetas de status */
         .status-badge {
             padding: 4px 10px;
             border-radius: 20px;
@@ -25,10 +25,28 @@ if(!isset($operators)) {
             white-space: nowrap;
         }
         .status-ativo { background-color: var(--cor-sucesso); }
-        .status-pendente_verificacao { background-color: #fd7e14; } /* Laranja */
-        .status-documentos_aprovados { background-color: #0d6efd; } /* Azul */
-        .status-inativo { background-color: #6c757d; } /* Cinza */
+        .status-pendente_verificacao { background-color: #fd7e14; }
+        .status-documentos_aprovados { background-color: #0d6efd; }
+        .status-inativo { background-color: #6c757d; }
         .status-bloqueado, .status-rejeitado { background-color: var(--cor-perigo); }
+
+        /* Estilo para o botão de formulário parecer um link (necessário para a correção CSRF) */
+        .link-button { 
+            background: none; 
+            border: none; 
+            padding: 0; 
+            color: #0d6efd; 
+            text-decoration: underline; 
+            cursor: pointer; 
+            font-size: inherit; 
+            font-family: inherit; 
+        }
+        .link-button.disable { 
+            color: var(--cor-perigo); 
+        }
+        .link-button:hover {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -61,21 +79,27 @@ if(!isset($operators)) {
                             <td><?= htmlspecialchars($operator['cpf']) ?></td>
                             <td><?= htmlspecialchars($operator['email']) ?></td>
                             <td>
-                                <span class="status-badge status-<?= str_replace(' ', '_', htmlspecialchars($operator['status'])) ?>">
-                                    <?= str_replace('_', ' ', htmlspecialchars($operator['status'])) ?>
+                                <span class="status-badge status-<?= str_replace(' ', '_', htmlspecialchars($operator['status'] ?? '')) ?>">
+                                    <?= str_replace('_', ' ', htmlspecialchars($operator['status'] ?? '')) ?>
                                 </span>
                             </td>
-                            <td><?= htmlspecialchars(number_format($operator['pontuacao'], 2, ',', '.')) ?></td>
+                            <td><?= htmlspecialchars(number_format($operator['pontuacao'] ?? 0, 2, ',', '.')) ?></td>
                             <td class="actions">
-                                <?php if ($operator['status'] === 'pendente_verificacao'): ?>
-                                    <a href="/admin/operadores/verificar?id=<?= $operator['id'] ?>" style="color: #fd7e14;">Analisar Registo</a>
+                                <?php if (($operator['status'] ?? '') === 'pendente_verificacao'): ?>
+                                    <a href="/admin/operadores/verificar?id=<?= urlencode($operator['id']) ?>" style="color: #fd7e14;">Analisar Registo</a>
                                 <?php else: ?>
-                                    <a href="/admin/operadores/editar?id=<?= $operator['id'] ?>">Editar</a>
-                                    <?php if ($operator['status'] === 'ativo'): ?>
-                                        <a href="/admin/operadores/toggle-status?id=<?= $operator['id'] ?>" class="disable" onclick="return confirm('Tem a certeza que quer desabilitar este operador?')">Desabilitar</a>
-                                    <?php else: ?>
-                                        <a href="/admin/operadores/toggle-status?id=<?= $operator['id'] ?>" class="enable" onclick="return confirm('Tem a certeza que quer habilitar este operador?')">Habilitar</a>
-                                    <?php endif; ?>
+                                    <a href="/admin/operadores/editar?id=<?= urlencode($operator['id']) ?>">Editar</a>
+                                    
+                                    <form action="/admin/operadores/toggle-status" method="POST" style="display: inline-block; margin-left: 10px;" onsubmit="return confirm('Tem a certeza?');">
+                                        <?php csrf_field(); ?>
+                                        <input type="hidden" name="id" value="<?= htmlspecialchars($operator['id']) ?>">
+                                        
+                                        <?php if (($operator['status'] ?? '') === 'ativo'): ?>
+                                            <button type="submit" class="link-button disable">Desabilitar</button>
+                                        <?php else: ?>
+                                            <button type="submit" class="link-button">Habilitar</button>
+                                        <?php endif; ?>
+                                    </form>
                                 <?php endif; ?>
                             </td>
                         </tr>

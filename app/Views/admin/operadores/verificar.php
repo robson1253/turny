@@ -10,7 +10,7 @@ if (!isset($operator)) {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Verificar Operador - <?= htmlspecialchars($operator['name']) ?></title>
+    <title>Verificar Operador - <?= htmlspecialchars($operator['name'] ?? 'N/D') ?></title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
         .verification-container { display: flex; gap: 30px; flex-wrap: wrap; }
@@ -69,7 +69,9 @@ if (!isset($operator)) {
             <hr style="margin: 30px 0;">
 
             <form action="/admin/operadores/processar-verificacao" method="POST">
-                <input type="hidden" name="operator_id" value="<?= $operator['id'] ?>">
+                <?php csrf_field(); // <-- CORREÇÃO: TOKEN CSRF ADICIONADO ?>
+                <input type="hidden" name="operator_id" value="<?= htmlspecialchars($operator['id'] ?? 0) ?>">
+                
                 <div class="form-group">
                     <label for="verification_notes">Notas Internas (visível apenas para si, opcional)</label>
                     <textarea id="verification_notes" name="verification_notes" rows="3"><?= htmlspecialchars($operator['verification_notes'] ?? '') ?></textarea>

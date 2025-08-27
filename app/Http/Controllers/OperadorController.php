@@ -6,8 +6,10 @@ use App\Database\Connection;
 use App\Utils\Validators;
 use App\Utils\Email;
 use PDOException;
+use Exception;
+use Throwable;
 
-class OperadorController
+class OperadorController extends BaseController
 {
     /**
      * Mostra a lista de todos os operadores. (Read)
@@ -15,7 +17,7 @@ class OperadorController
     public function index()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
 
         try {
@@ -23,9 +25,9 @@ class OperadorController
             $stmt = $pdo->query('SELECT id, name, cpf, email, phone, status, pontuacao FROM operators ORDER BY name ASC');
             $operators = $stmt->fetchAll();
 
-            require_once __DIR__ . '/../../Views/admin/operadores/listar_operadores.php';
+            $this->view('admin/operadores/listar_operadores', ['operators' => $operators]);
         } catch (PDOException $e) {
-            die('Erro ao buscar os operadores: ' . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -35,19 +37,21 @@ class OperadorController
     public function showCreateForm()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
-        require_once __DIR__ . '/../../Views/admin/operadores/criar_operador.php';
+        $this->view('admin/operadores/criar_operador');
     }
 
     /**
-     * Guarda um novo operador criado pelo admin. (Create)
+     * Guarda um novo operador criado pelo admin e cria sua carteira. (Create)
      */
     public function store()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
+        
+        verify_csrf_token();
 
         $name = $_POST['name'] ?? '';
         $cpf = $_POST['cpf'] ?? '';
@@ -66,27 +70,40 @@ class OperadorController
         $cepLimpo = $cep ? preg_replace('/[^0-9]/', '', $cep) : null;
         
         if (empty($name) || empty($cpfLimpo) || empty($email) || empty($password)) {
-            die('Erro: Nome, CPF, E-mail e Senha são obrigatórios.');
+            throw new Exception('Nome, CPF, E-mail e Senha são obrigatórios.');
         }
         if (!Validators::validateCpf($cpfLimpo)) {
-            die('Erro: O CPF fornecido é inválido.');
+            throw new Exception('O CPF fornecido é inválido.');
         }
 
+        $pdo = Connection::getPdo();
         try {
+            $pdo->beginTransaction();
+
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
             
-            $pdo = Connection::getPdo();
             $sql = "INSERT INTO operators (name, cpf, phone, email, password, cep, endereco, numero, bairro, cidade, estado, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ativo')";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$name, $cpfLimpo, $telefoneLimpo, $email, $passwordHash, $cepLimpo, $endereco, $numero, $bairro, $cidade, $estado]);
 
+            // Cria a carteira para o novo operador
+            $newOperatorId = $pdo->lastInsertId();
+            $stmtWallet = $pdo->prepare("INSERT INTO operator_wallets (operator_id) VALUES (?)");
+            $stmtWallet->execute([$newOperatorId]);
+
+            $pdo->commit();
+
+            flash('Operador criado com sucesso!', 'success');
             header('Location: /admin/operadores');
             exit();
-        } catch (PDOException $e) {
-            if ($e->errorInfo[1] == 1062) {
-                die('Erro: O E-mail ou CPF fornecido já está registado na plataforma.');
+
+        } catch (Throwable $e) {
+            if ($pdo->inTransaction()) $pdo->rollBack();
+            
+            if ($e instanceof PDOException && $e->errorInfo[1] == 1062) {
+                throw new Exception('O E-mail ou CPF fornecido já está registado na plataforma.');
             }
-            die('Erro ao guardar o operador: ' . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -96,19 +113,20 @@ class OperadorController
     public function edit()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
         $operatorId = $_GET['id'] ?? null;
-        if (!$operatorId) die('ID do operador não fornecido.');
+        if (!$operatorId) throw new Exception('ID do operador não fornecido.');
         try {
             $pdo = Connection::getPdo();
             $stmt = $pdo->prepare('SELECT * FROM operators WHERE id = ?');
             $stmt->execute([$operatorId]);
             $operator = $stmt->fetch();
-            if (!$operator) die('Operador não encontrado.');
-            require_once __DIR__ . '/../../Views/admin/operadores/editar_operador.php';
+            if (!$operator) throw new Exception('Operador não encontrado.');
+            
+            $this->view('admin/operadores/editar_operador', ['operator' => $operator]);
         } catch (PDOException $e) {
-            die('Erro ao buscar os dados do operador: ' . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -118,8 +136,10 @@ class OperadorController
     public function update()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
+        
+        verify_csrf_token();
         
         $id = $_POST['id'] ?? null;
         $name = $_POST['name'] ?? '';
@@ -139,8 +159,8 @@ class OperadorController
         $telefoneLimpo = $phone ? preg_replace('/[^0-9]/', '', $phone) : null;
         $cepLimpo = $cep ? preg_replace('/[^0-9]/', '', $cep) : null;
 
-        if (!$id) die('Erro: ID do operador em falta.');
-        if (!Validators::validateCpf($cpfLimpo)) die('Erro: O CPF fornecido é inválido.');
+        if (!$id) throw new Exception('ID do operador em falta.');
+        if (!Validators::validateCpf($cpfLimpo)) throw new Exception('O CPF fornecido é inválido.');
 
         try {
             $pdo = Connection::getPdo();
@@ -157,14 +177,15 @@ class OperadorController
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
 
+            flash('Operador atualizado com sucesso!', 'success');
             header('Location: /admin/operadores');
             exit();
 
         } catch (PDOException $e) {
             if ($e->errorInfo[1] == 1062) {
-                die('Erro: O E-mail ou CPF fornecido já pertence a outro operador.');
+                throw new Exception('O E-mail ou CPF fornecido já pertence a outro operador.');
             }
-            die('Erro ao atualizar o operador: ' . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -174,23 +195,33 @@ class OperadorController
     public function toggleStatus()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
-        $operatorId = $_GET['id'] ?? null;
-        if (!$operatorId) die('ID do operador não fornecido.');
+
+        verify_csrf_token();
+        
+        $operatorId = $_POST['id'] ?? null;
+
+        if (!$operatorId) throw new Exception('ID do operador não fornecido.');
+
         $pdo = Connection::getPdo();
         try {
             $stmt = $pdo->prepare('SELECT status FROM operators WHERE id = ?');
             $stmt->execute([$operatorId]);
             $operator = $stmt->fetch();
-            if (!$operator) die('Operador não encontrado.');
+            
+            if (!$operator) throw new Exception('Operador não encontrado.');
+            
             $newStatus = ($operator['status'] === 'ativo') ? 'inativo' : 'ativo';
+            
             $updateStmt = $pdo->prepare('UPDATE operators SET status = ? WHERE id = ?');
             $updateStmt->execute([$newStatus, $operatorId]);
+            
+            flash('Status do operador alterado com sucesso!', 'success');
             header('Location: /admin/operadores');
             exit();
         } catch (PDOException $e) {
-            die('Erro ao alterar o status do operador: ' . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -200,19 +231,20 @@ class OperadorController
     public function showVerificationForm()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
         $operatorId = $_GET['id'] ?? null;
-        if (!$operatorId) die('ID do operador não fornecido.');
+        if (!$operatorId) throw new Exception('ID do operador não fornecido.');
         try {
             $pdo = Connection::getPdo();
             $stmt = $pdo->prepare("SELECT * FROM operators WHERE id = ?");
             $stmt->execute([$operatorId]);
             $operator = $stmt->fetch();
-            if (!$operator) die('Operador não encontrado.');
-            require_once __DIR__ . '/../../Views/admin/operadores/verificar.php';
+            if (!$operator) throw new Exception('Operador não encontrado.');
+            
+            $this->view('admin/operadores/verificar', ['operator' => $operator]);
         } catch (PDOException $e) {
-            die('Erro ao buscar os dados do operador para verificação: ' . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -222,15 +254,17 @@ class OperadorController
     public function processVerification()
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
-            http_response_code(403); die('Acesso negado.');
+            throw new Exception('Acesso negado.', 403);
         }
+
+        verify_csrf_token();
 
         $operatorId = $_POST['operator_id'] ?? null;
         $action = $_POST['action'] ?? '';
         $notes = $_POST['verification_notes'] ?? '';
 
         if (!$operatorId || !in_array($action, ['approve', 'reject'])) {
-            die('Ação inválida ou ID do operador em falta.');
+            throw new Exception('Ação inválida ou ID do operador em falta.');
         }
 
         $newStatus = ($action === 'approve') ? 'documentos_aprovados' : 'rejeitado';
@@ -240,7 +274,7 @@ class OperadorController
             $stmtOperator = $pdo->prepare("SELECT name, email FROM operators WHERE id = ?");
             $stmtOperator->execute([$operatorId]);
             $operator = $stmtOperator->fetch();
-            if (!$operator) die('Operador não encontrado para enviar a notificação.');
+            if (!$operator) throw new Exception('Operador não encontrado para enviar a notificação.');
 
             $sql = "UPDATE operators SET status = ?, verification_notes = ? WHERE id = ?";
             $stmt = $pdo->prepare($sql);
@@ -259,10 +293,11 @@ class OperadorController
 
             Email::sendEmail($operatorEmail, $operatorName, $subject, $body);
 
+            flash('Verificação processada com sucesso!', 'success');
             header('Location: /admin/operadores');
             exit();
         } catch (PDOException $e) {
-            die('Erro ao processar a verificação do operador: ' . $e->getMessage());
+            throw $e;
         }
     }
 }

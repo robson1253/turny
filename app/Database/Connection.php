@@ -18,12 +18,12 @@ class Connection
             // Carrega as configurações do nosso ficheiro config/database.php
             $config = require __DIR__ . '/../../config/database.php';
 
-            // Monta a "string de conexão" (DSN)
-            $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['dbname']};charset={$config['charset']}";
+            // Monta a "string de conexão" (DSN) - LINHA CORRIGIDA
+            $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']};charset=utf8mb4";
 
             try {
-                // Tenta criar a conexão PDO
-                self::$pdo = new PDO($dsn, $config['user'], $config['password'], [
+                // Tenta criar a conexão PDO - LINHA CORRIGIDA
+                self::$pdo = new PDO($dsn, $config['username'], $config['password'], [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                 ]);

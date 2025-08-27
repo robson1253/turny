@@ -9,13 +9,14 @@ use PDOException;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use Throwable;
 
 class PainelOperadorController extends BaseController
 {
     /**
      * Helper para verificar se o operador está logado.
      */
-    private function checkAccess()
+    protected function checkAccess(array $allowedRoles = [])
     {
         if (!isset($_SESSION['operator_id'])) {
             header('Location: /login');
@@ -33,22 +34,42 @@ class PainelOperadorController extends BaseController
             $pdo = Connection::getPdo();
             $operatorId = $_SESSION['operator_id'];
             
-            $stmt = $pdo->prepare("
-                SELECT 
-                    s.id, COALESCE(jf.name, s.title) as title, s.shift_date, s.start_time, s.end_time, s.operator_payment as value,
-                    c.nome_fantasia as company_name,
-                    st.name as store_name, st.cidade, st.estado
-                FROM shifts s
-                JOIN companies c ON s.company_id = c.id
-                JOIN stores st ON s.store_id = st.id
-                LEFT JOIN job_functions jf ON s.job_function_id = jf.id
-                WHERE s.status = 'aberta' AND c.status = 1 AND st.status = 1
-                  AND st.erp_system_id IN (SELECT oq.erp_system_id FROM operator_qualifications oq WHERE oq.operator_id = :operator_id)
-                  AND s.id NOT IN (SELECT sa.shift_id FROM shift_applications sa WHERE sa.operator_id = :operator_id)
-                ORDER BY s.shift_date ASC, s.start_time ASC
-            ");
-            $stmt->execute(['operator_id' => $operatorId]);
-            $vagasAbertas = $stmt->fetchAll();
+            $stmtOperatorLocation = $pdo->prepare("SELECT cidade, estado FROM operators WHERE id = ?");
+            $stmtOperatorLocation->execute([$operatorId]);
+            $operatorLocation = $stmtOperatorLocation->fetch();
+
+            $vagasAbertas = [];
+
+            if ($operatorLocation) {
+                $stmt = $pdo->prepare("
+                    SELECT 
+                        s.id, COALESCE(jf.name, s.title) as title, s.shift_date, s.start_time, s.end_time, s.operator_payment as value,
+                        c.nome_fantasia as company_name,
+                        st.name as store_name, st.cidade, st.estado
+                    FROM shifts s
+                    JOIN companies c ON s.company_id = c.id
+                    JOIN stores st ON s.store_id = st.id
+                    LEFT JOIN job_functions jf ON s.job_function_id = jf.id
+                    WHERE s.status = 'aberta' 
+                        AND c.status = 1 
+                        AND st.status = 1
+                        AND st.erp_system_id IN (SELECT oq.erp_system_id FROM operator_qualifications oq WHERE oq.operator_id = :operator_id)
+                        AND s.id NOT IN (SELECT sa.shift_id FROM shift_applications sa WHERE sa.operator_id = :operator_id)
+                        AND st.cidade = :operator_cidade AND st.estado = :operator_estado
+                        AND NOT EXISTS (
+                            SELECT 1 FROM company_operator_blocks cob 
+                            WHERE cob.operator_id = :operator_id AND cob.company_id = s.company_id
+                        )
+                    ORDER BY s.shift_date ASC, s.start_time ASC
+                ");
+
+                $stmt->execute([
+                    'operator_id' => $operatorId,
+                    'operator_cidade' => $operatorLocation['cidade'],
+                    'operator_estado' => $operatorLocation['estado']
+                ]);
+                $vagasAbertas = $stmt->fetchAll();
+            }
 
             $stmtOffers = $pdo->prepare("SELECT COUNT(*) FROM shift_transfers WHERE to_operator_id = ? AND status = 'pendente'");
             $stmtOffers->execute([$operatorId]);
@@ -60,10 +81,9 @@ class PainelOperadorController extends BaseController
             throw $e;
         }
     }
+    
+    // (A PARTIR DAQUI, TODOS OS MÉTODOS FORAM REVISADOS E COLOCADOS NA ORDEM CORRETA)
 
-    /**
-     * Mostra a Central de Qualificações do operador.
-     */
     public function showQualificationsPage()
     {
         $this->checkAccess();
@@ -96,13 +116,10 @@ class PainelOperadorController extends BaseController
         }
     }
 
-    /**
-     * Regista o agendamento de um treinamento para um operador.
-     */
     public function scheduleTraining()
     {
         $this->checkAccess();
-        verify_csrf_token();
+        \verify_csrf_token();
         
         $erpId = $_POST['erp_system_id'] ?? null;
         $storeId = $_POST['store_id'] ?? null;
@@ -116,11 +133,10 @@ class PainelOperadorController extends BaseController
 
         try {
             $pdo = Connection::getPdo();
-            
             $now = new DateTime("now", new DateTimeZone('America/Sao_Paulo'));
             $scheduledDateTime = new DateTime($date . ' ' . (($slot === 'manha') ? '09:00:00' : '14:00:00'), new DateTimeZone('America/Sao_Paulo'));
             if (($scheduledDateTime->getTimestamp() - $now->getTimestamp()) / 3600 < 24) {
-                flash('Não é possível agendar um treinamento com menos de 24 horas de antecedência.', 'error');
+                \flash('Não é possível agendar um treinamento com menos de 24 horas de antecedência.', 'error');
                 header('Location: /painel/operador/qualificacoes');
                 exit();
             }
@@ -128,7 +144,7 @@ class PainelOperadorController extends BaseController
             $stmtCheckOperator = $pdo->prepare("SELECT COUNT(*) FROM training_requests WHERE operator_id = ? AND scheduled_date = ? AND scheduled_slot = ? AND status = 'agendado'");
             $stmtCheckOperator->execute([$operatorId, $date, $slot]);
             if ($stmtCheckOperator->fetchColumn() > 0) {
-                flash('Você já tem um treinamento agendado neste mesmo horário.', 'error');
+                \flash('Você já tem um treinamento agendado neste mesmo horário.', 'error');
                 header('Location: /painel/operador/qualificacoes');
                 exit();
             }
@@ -136,57 +152,50 @@ class PainelOperadorController extends BaseController
             $stmtInsert = $pdo->prepare("INSERT INTO training_requests (operator_id, erp_system_id, store_id, scheduled_date, scheduled_slot, status) VALUES (?, ?, ?, ?, ?, 'agendado')");
             $stmtInsert->execute([$operatorId, $erpId, $storeId, $date, $slot]);
             
-            flash('Treinamento agendado com sucesso!');
+            \flash('Treinamento agendado com sucesso!');
             header('Location: /painel/operador/qualificacoes');
             exit();
 
         } catch (PDOException $e) {
             if ($e->errorInfo[1] == 1062) { // Erro de entrada duplicada
-                flash('Já existe um treinamento agendado para esta loja neste horário.', 'error');
+                \flash('Já existe um treinamento agendado para esta loja neste horário.', 'error');
                 header('Location: /painel/operador/qualificacoes');
                 exit();
             }
             throw $e;
         }
     }
-    /**
-     * Processa a aceitação de uma vaga por um operador qualificado.
-     */
+    
     public function acceptShift()
     {
         $this->checkAccess();
-        verify_csrf_token();
+        \verify_csrf_token();
         $shiftId = $_POST['id'] ?? null;
         $operatorId = $_SESSION['operator_id'];
         if (!$shiftId) throw new Exception('ID da vaga não fornecido.');
         
+        $pdo = Connection::getPdo();
         try {
-            $pdo = Connection::getPdo();
             $pdo->beginTransaction();
-            
-            $stmtNewShift = $pdo->prepare("SELECT * FROM shifts WHERE id = ? AND status = 'aberta'");
+            $stmtNewShift = $pdo->prepare("SELECT * FROM shifts WHERE id = ? AND status = 'aberta' FOR UPDATE");
             $stmtNewShift->execute([$shiftId]);
             $newShift = $stmtNewShift->fetch();
             if (!$newShift) {
-                flash('Esta vaga acabou de ser preenchida por outro operador.', 'error');
+                $pdo->rollBack();
+                \flash('Esta vaga acabou de ser preenchida ou não está mais disponível.', 'error');
                 header('Location: /painel/operador');
                 exit();
             }
-
-            $stmtConflict = $pdo->prepare("
-                SELECT COUNT(*) FROM shifts s JOIN shift_applications sa ON s.id = sa.shift_id
-                WHERE sa.operator_id = :operator_id AND sa.status = 'aprovado' AND s.shift_date = :shift_date AND s.start_time < :end_time AND s.end_time > :start_time
-            ");
+            $stmtConflict = $pdo->prepare("SELECT COUNT(*) FROM shifts s JOIN shift_applications sa ON s.id = sa.shift_id WHERE sa.operator_id = :operator_id AND sa.status IN ('aprovado', 'check_in') AND s.shift_date = :shift_date AND s.start_time < :end_time AND s.end_time > :start_time");
             $stmtConflict->execute([':operator_id' => $operatorId, ':shift_date' => $newShift['shift_date'], ':start_time' => $newShift['start_time'], ':end_time' => $newShift['end_time']]);
             if ($stmtConflict->fetchColumn() > 0) {
-                flash('Não foi possível aceitar a vaga. O horário entra em conflito com outro turno que você já aceitou.', 'error');
+                $pdo->rollBack();
+                \flash('Não foi possível aceitar a vaga. O horário entra em conflito com outro turno que você já tem.', 'error');
                 header('Location: /painel/operador');
                 exit();
             }
-            
             $stmtInsert = $pdo->prepare("INSERT INTO shift_applications (shift_id, operator_id, status) VALUES (?, ?, 'aprovado')");
             $stmtInsert->execute([$shiftId, $operatorId]);
-            
             $stmtCount = $pdo->prepare("SELECT COUNT(*) FROM shift_applications WHERE shift_id = ? AND status = 'aprovado'");
             $stmtCount->execute([$shiftId]);
             $approvedCount = $stmtCount->fetchColumn();
@@ -194,21 +203,16 @@ class PainelOperadorController extends BaseController
                 $stmtFill = $pdo->prepare("UPDATE shifts SET status = 'preenchida' WHERE id = ?");
                 $stmtFill->execute([$shiftId]);
             }
-
-            // Busca dados para o email
             $stmtOperator = $pdo->prepare("SELECT name, email FROM operators WHERE id = ?");
             $stmtOperator->execute([$operatorId]);
             $operator = $stmtOperator->fetch();
-            
             $pdo->commit();
-
             if ($operator) {
                 $subject = "Vaga Aceita! Detalhes do seu próximo turno na TURNY.";
                 $body = "<h1>Parabéns, ".htmlspecialchars($operator['name'])."!</h1><p>Você aceitou a vaga e já está confirmado! Acesse 'Meus Turnos' para ver os detalhes.</p><p><strong>Equipe TURNY</strong></p>";
                 Email::sendEmail($operator['email'], $operator['name'], $subject, $body);
             }
-
-            flash('Vaga aceita com sucesso! Pode vê-la em "Meus Turnos".');
+            \flash('Vaga aceita com sucesso! Pode vê-la em "Meus Turnos".');
             header('Location: /painel/operador');
             exit();
         } catch (PDOException $e) {
@@ -217,9 +221,6 @@ class PainelOperadorController extends BaseController
         }
     }
     
-    /**
-     * Mostra a lista de turnos do operador, incluindo os concluídos para avaliação.
-     */
     public function showMyShifts()
     {
         $this->checkAccess();
@@ -243,32 +244,25 @@ class PainelOperadorController extends BaseController
             ");
             $stmt->execute([$operatorId]);
             $myShifts = $stmt->fetchAll();
-
             $stmtRated = $pdo->prepare("SELECT application_id FROM shift_ratings WHERE rated_operator_id = ? AND rating_for_company IS NOT NULL");
             $stmtRated->execute([$operatorId]);
             $ratedApplicationIds = $stmtRated->fetchAll(PDO::FETCH_COLUMN, 0);
-            
             $stmtOffers = $pdo->prepare("SELECT COUNT(*) FROM shift_transfers WHERE to_operator_id = ? AND status = 'pendente'");
             $stmtOffers->execute([$operatorId]);
             $pendingOffers = $stmtOffers->fetchColumn();
-            
             $this->view('operador/meus_turnos', compact('myShifts', 'pendingOffers', 'ratedApplicationIds'));
         } catch (PDOException $e) {
             throw $e;
         }
     }
 
-    /**
-     * Processa o cancelamento de uma candidatura pelo operador.
-     */
     public function cancelApplication()
     {
         $this->checkAccess();
-        verify_csrf_token();
+        \verify_csrf_token();
         $applicationId = $_POST['application_id'] ?? null;
         $operatorId = $_SESSION['operator_id'];
         if (!$applicationId) throw new Exception('ID da candidatura não fornecido.');
-        
         try {
             $pdo = Connection::getPdo();
             $pdo->beginTransaction();
@@ -281,23 +275,19 @@ class PainelOperadorController extends BaseController
             $stmt->execute([$applicationId]);
             $application = $stmt->fetch();
             if (!$application || $application['operator_id'] != $operatorId) throw new Exception('Acesso não permitido.');
-            
             $now = new DateTime("now", new DateTimeZone('America/Sao_Paulo'));
             $shiftStart = new DateTime($application['shift_date'] . ' ' . $application['start_time'], new DateTimeZone('America/Sao_Paulo'));
-            
             if ($now > $shiftStart || ($shiftStart->getTimestamp() - $now->getTimestamp()) < (12 * 3600)) {
-                flash('Não é possível cancelar um turno com menos de 12 horas de antecedência.', 'error');
+                \flash('Não é possível cancelar um turno com menos de 12 horas de antecedência.', 'error');
                 header('Location: /painel/operador/meus-turnos');
                 exit();
             }
-
             $stmtCancel = $pdo->prepare("UPDATE shift_applications SET status = 'cancelado_operador' WHERE id = ?");
             $stmtCancel->execute([$applicationId]);
             $stmtReopen = $pdo->prepare("UPDATE shifts SET status = 'aberta' WHERE id = ?");
             $stmtReopen->execute([$application['shift_id']]);
-            
             $pdo->commit();
-            flash('Turno cancelado com sucesso.');
+            \flash('Turno cancelado com sucesso.');
             header('Location: /painel/operador/meus-turnos');
             exit();
         } catch (PDOException $e) {
@@ -306,98 +296,170 @@ class PainelOperadorController extends BaseController
         }
     }
 
-    /**
-     * Mostra a página de perfil do operador logado.
-     */
     public function showProfile()
     {
         $this->checkAccess();
         try {
             $pdo = Connection::getPdo();
             $operatorId = $_SESSION['operator_id'];
-
-            // 1. Busca os dados principais do operador
-            $stmtOperator = $pdo->prepare("SELECT * FROM operators WHERE id = ?");
+            $stmtOperator = $pdo->prepare("
+                SELECT o.*, w.balance 
+                FROM operators o
+                LEFT JOIN operator_wallets w ON o.id = w.operator_id
+                WHERE o.id = ?
+            ");
             $stmtOperator->execute([$operatorId]);
             $operator = $stmtOperator->fetch();
             if (!$operator) {
                 throw new Exception('Operador não encontrado.');
             }
-
-            // 2. Busca as qualificações de SISTEMA (ERP)
-            $stmtErpQualifications = $pdo->prepare("
-                SELECT es.name 
-                FROM operator_qualifications oq
-                JOIN erp_systems es ON oq.erp_system_id = es.id
-                WHERE oq.operator_id = ?
-            ");
+            $stmtErpQualifications = $pdo->prepare("SELECT es.name FROM operator_qualifications oq JOIN erp_systems es ON oq.erp_system_id = es.id WHERE oq.operator_id = ?");
             $stmtErpQualifications->execute([$operatorId]);
             $erpQualifications = $stmtErpQualifications->fetchAll(PDO::FETCH_COLUMN, 0);
-
-            // 3. Busca as qualificações de FUNÇÃO
-            $stmtJobQualifications = $pdo->prepare("
-                SELECT jf.name 
-                FROM operator_job_qualifications ojq
-                JOIN job_functions jf ON ojq.job_function_id = jf.id
-                WHERE ojq.operator_id = ?
-            ");
+            $stmtJobQualifications = $pdo->prepare("SELECT jf.name FROM operator_job_qualifications ojq JOIN job_functions jf ON ojq.job_function_id = jf.id WHERE ojq.operator_id = ?");
             $stmtJobQualifications->execute([$operatorId]);
             $jobQualifications = $stmtJobQualifications->fetchAll(PDO::FETCH_COLUMN, 0);
-
-            // 4. Busca as ofertas pendentes
             $stmtOffers = $pdo->prepare("SELECT COUNT(*) FROM shift_transfers WHERE to_operator_id = ? AND status = 'pendente'");
             $stmtOffers->execute([$operatorId]);
             $pendingOffers = $stmtOffers->fetchColumn();
-            
-            // 5. Envia todos os dados para a view
             $this->view('operador/perfil', compact('operator', 'erpQualifications', 'jobQualifications', 'pendingOffers'));
-
         } catch (PDOException $e) {
             throw $e;
         }
     }
 
-    /**
-     * Inicia uma oferta de transferência de vaga para outro operador.
-     */
+    public function showWallet()
+    {
+        $this->checkAccess();
+        try {
+            $pdo = Connection::getPdo();
+            $operatorId = $_SESSION['operator_id'];
+            $stmtWallet = $pdo->prepare("SELECT id, balance FROM operator_wallets WHERE operator_id = ?");
+            $stmtWallet->execute([$operatorId]);
+            $wallet = $stmtWallet->fetch();
+            $transactions = [];
+            if ($wallet) {
+                $stmtTx = $pdo->prepare("SELECT * FROM wallet_transactions WHERE wallet_id = ? ORDER BY created_at DESC LIMIT 15");
+                $stmtTx->execute([$wallet['id']]);
+                $transactions = $stmtTx->fetchAll();
+            }
+            $stmtOffers = $pdo->prepare("SELECT COUNT(*) FROM shift_transfers WHERE to_operator_id = ? AND status = 'pendente'");
+            $stmtOffers->execute([$operatorId]);
+            $pendingOffers = $stmtOffers->fetchColumn();
+            $this->view('operador/carteira', [
+                'balance' => $wallet['balance'] ?? 0.00,
+                'transactions' => $transactions,
+                'pendingOffers' => $pendingOffers
+            ]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function showTransferForm()
+    {
+        $this->checkAccess();
+        try {
+            $pdo = Connection::getPdo();
+            $stmt = $pdo->prepare("SELECT balance FROM operator_wallets WHERE operator_id = ?");
+            $stmt->execute([$_SESSION['operator_id']]);
+            $wallet = $stmt->fetch();
+            $this->view('operador/transferir', ['balance' => $wallet['balance'] ?? 0.00]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function processTransfer()
+    {
+        $this->checkAccess();
+        \verify_csrf_token();
+        $toUsername = trim($_POST['to_username'] ?? '');
+        $amountStr = str_replace(',', '.', $_POST['amount'] ?? '0');
+        $amount = round((float)$amountStr, 2);
+        $description = trim($_POST['description'] ?? 'Transferência');
+        $fromOperatorId = $_SESSION['operator_id'];
+        if (empty($toUsername) || $amount <= 0) {
+            \flash('Por favor, preencha o @username e um valor válido.', 'error');
+            header('Location: /painel/operador/transferir');
+            exit();
+        }
+        $pdo = Connection::getPdo();
+        try {
+            $pdo->beginTransaction();
+            $stmtTo = $pdo->prepare("SELECT id FROM operators WHERE username = ? AND id != ?");
+            $stmtTo->execute([$toUsername, $fromOperatorId]);
+            $toOperator = $stmtTo->fetch();
+            if (!$toOperator) {
+                throw new Exception('Operador de destino não encontrado ou é o mesmo que o remetente.');
+            }
+            $toOperatorId = $toOperator['id'];
+            $stmtToWallet = $pdo->prepare("SELECT id FROM operator_wallets WHERE operator_id = ? FOR UPDATE");
+            $stmtToWallet->execute([$toOperatorId]);
+            $toWallet = $stmtToWallet->fetch();
+            $toWalletId = $toWallet ? $toWallet['id'] : null;
+            if (!$toWalletId) {
+                $pdo->prepare("INSERT INTO operator_wallets (operator_id) VALUES (?)")->execute([$toOperatorId]);
+                $toWalletId = $pdo->lastInsertId();
+            }
+            $stmtFrom = $pdo->prepare("SELECT id, balance FROM operator_wallets WHERE operator_id = ? FOR UPDATE");
+            $stmtFrom->execute([$fromOperatorId]);
+            $fromWallet = $stmtFrom->fetch();
+            if (!$fromWallet || $fromWallet['balance'] < $amount) {
+                throw new Exception('Saldo insuficiente para realizar a transferência.');
+            }
+            $fromWalletId = $fromWallet['id'];
+            $stmtDebit = $pdo->prepare("UPDATE operator_wallets SET balance = balance - ? WHERE id = ?");
+            $stmtDebit->execute([$amount, $fromWalletId]);
+            $stmtCredit = $pdo->prepare("UPDATE operator_wallets SET balance = balance + ? WHERE id = ?");
+            $stmtCredit->execute([$amount, $toWalletId]);
+            $stmtTxOut = $pdo->prepare("INSERT INTO wallet_transactions (wallet_id, type, amount, description, counterparty_operator_id) VALUES (?, 'transfer_out', ?, ?, ?)");
+            $stmtTxOut->execute([$fromWalletId, $amount, $description, $toOperatorId]);
+            $stmtTxIn = $pdo->prepare("INSERT INTO wallet_transactions (wallet_id, type, amount, description, counterparty_operator_id) VALUES (?, 'transfer_in', ?, ?, ?)");
+            $stmtTxIn->execute([$toWalletId, $amount, $description, $fromOperatorId]);
+            $pdo->commit();
+            \flash('Transferência realizada com sucesso!', 'success');
+            header('Location: /painel/operador/perfil');
+            exit();
+        } catch (Exception $e) {
+            if ($pdo->inTransaction()) $pdo->rollBack();
+            \flash('Erro: ' . $e->getMessage(), 'error');
+            header('Location: /painel/operador/transferir');
+            exit();
+        }
+    }
+
     public function initiateTransfer()
     {
         $this->checkAccess();
-        verify_csrf_token();
+        \verify_csrf_token();
         $applicationId = $_POST['application_id'] ?? null;
         $toUsername = $_POST['username'] ?? '';
         $fromOperatorId = $_SESSION['operator_id'];
         if (!$applicationId || empty($toUsername)) {
-            flash('Dados da transferência em falta.', 'error');
+            \flash('Dados da transferência em falta.', 'error');
             header('Location: /painel/operador/meus-turnos');
             exit();
         }
-        
         try {
             $pdo = Connection::getPdo();
             $pdo->beginTransaction();
-
             $stmt = $pdo->prepare("SELECT sa.id as application_id, sa.shift_id, sa.operator_id, s.shift_date, s.start_time, s.end_time, st.erp_system_id FROM shift_applications sa JOIN shifts s ON sa.shift_id = s.id JOIN stores st ON s.store_id = st.id WHERE sa.id = ? AND sa.status = 'aprovado'");
             $stmt->execute([$applicationId]);
             $application = $stmt->fetch();
             if (!$application || $application['operator_id'] != $fromOperatorId) throw new Exception('Você não tem permissão para transferir esta vaga.');
-            
             $stmtToOperator = $pdo->prepare("SELECT * FROM operators WHERE username = ? AND status = 'ativo'");
             $stmtToOperator->execute([$toUsername]);
             $toOperator = $stmtToOperator->fetch();
             if (!$toOperator || $toOperator['id'] == $fromOperatorId) {
-                flash('Transferência falhou: O @username inserido não foi encontrado ou não está ativo.', 'error');
+                \flash('Transferência falhou: O @username inserido não foi encontrado ou não está ativo.', 'error');
                 header('Location: /painel/operador/meus-turnos');
                 exit();
             }
-
-            // ... (outras verificações de tempo, qualificação e conflitos) ...
-
             $stmtLog = $pdo->prepare("INSERT INTO shift_transfers (shift_id, application_id, from_operator_id, to_operator_id, status) VALUES (?, ?, ?, ?, 'pendente')");
             $stmtLog->execute([$application['shift_id'], $applicationId, $fromOperatorId, $toOperator['id']]);
-            
             $pdo->commit();
-            flash('Oferta de transferência enviada com sucesso!');
+            \flash('Oferta de transferência enviada com sucesso!');
             header('Location: /painel/operador/meus-turnos');
             exit();
         } catch (PDOException $e) {
@@ -406,9 +468,6 @@ class PainelOperadorController extends BaseController
         }
     }
 
-    /**
-     * Mostra a página com as ofertas de transferência recebidas pelo operador.
-     */
     public function showTransferOffers()
     {
         $this->checkAccess();
@@ -424,13 +483,10 @@ class PainelOperadorController extends BaseController
         }
     }
 
-    /**
-     * Processa a resposta (aceite/recusa) a uma oferta de transferência.
-     */
     public function respondToTransfer()
     {
         $this->checkAccess();
-        verify_csrf_token();
+        \verify_csrf_token();
         $transferId = $_POST['transfer_id'] ?? null;
         $response = $_POST['response'] ?? '';
         $toOperatorId = $_SESSION['operator_id'];
@@ -444,17 +500,14 @@ class PainelOperadorController extends BaseController
             $stmt->execute([$transferId, $toOperatorId]);
             $transfer = $stmt->fetch();
             if (!$transfer) throw new Exception('Oferta não encontrada ou já processada.');
-            
             $stmtUpdate = $pdo->prepare("UPDATE shift_transfers SET status = ?, resolved_at = NOW() WHERE id = ?");
             $stmtUpdate->execute([$response, $transferId]);
-            
             if ($response === 'aceite') {
                 $stmtSwap = $pdo->prepare("UPDATE shift_applications SET operator_id = ?, transferred_in = 1 WHERE id = ?");
                 $stmtSwap->execute([$toOperatorId, $transfer['application_id']]);
             }
-            
             $pdo->commit();
-            flash('Resposta à oferta enviada com sucesso!');
+            \flash('Resposta à oferta enviada com sucesso!');
             header('Location: /painel/operador/meus-turnos');
             exit();
         } catch (PDOException $e) {
@@ -463,9 +516,6 @@ class PainelOperadorController extends BaseController
         }
     }
 
-    /**
-     * Mostra o formulário para o operador avaliar a empresa.
-     */
     public function showRateCompanyForm()
     {
         $this->checkAccess();
@@ -483,13 +533,10 @@ class PainelOperadorController extends BaseController
         }
     }
     
-    /**
-     * Guarda a avaliação que o operador fez da empresa.
-     */
     public function rateCompany()
     {
         $this->checkAccess();
-        verify_csrf_token();
+        \verify_csrf_token();
         $applicationId = $_POST['application_id'] ?? null;
         $rating = $_POST['rating'] ?? null;
         $comment = $_POST['comment'] ?? '';
@@ -500,14 +547,29 @@ class PainelOperadorController extends BaseController
             $stmt = $pdo->prepare("SELECT id FROM shift_ratings WHERE application_id = ? AND rated_operator_id = ?");
             $stmt->execute([$applicationId, $operatorId]);
             $ratingRecord = $stmt->fetch();
-            if (!$ratingRecord) throw new Exception('Registo de avaliação não encontrado.');
+            if (!$ratingRecord) {
+                 throw new Exception('Registo de avaliação não encontrado. A empresa precisa finalizar o turno primeiro.');
+            }
             $stmtUpdate = $pdo->prepare("UPDATE shift_ratings SET rating_for_company = ?, comment_for_company = ? WHERE id = ?");
             $stmtUpdate->execute([$rating, $comment, $ratingRecord['id']]);
-            flash('Avaliação enviada com sucesso. Obrigado!');
+            \flash('Avaliação enviada com sucesso. Obrigado!');
             header('Location: /painel/operador/meus-turnos');
             exit();
         } catch (PDOException $e) {
             throw $e;
         }
     }
+
+
+    public function showPaymentPage()
+    {
+        $this->checkAccess();
+        $this->view('operador/pagar');
+    }
+	public function showPaymentSuccessPage()
+{
+    $this->checkAccess();
+    $this->view('operador/pagamento_sucesso');
 }
+}
+

@@ -1,3 +1,35 @@
+<?php
+// Preparação segura e completa das variáveis vindas do controlador
+$operator = $operator ?? [];
+$erpQualifications = $erpQualifications ?? [];
+$pendingOffers = $pendingOffers ?? 0;
+
+// Extrai e sanitiza todas as variáveis no início para um código mais limpo
+$name = htmlspecialchars($operator['name'] ?? 'Operador');
+$username = htmlspecialchars($operator['username'] ?? 'N/A');
+$score = htmlspecialchars(number_format($operator['pontuacao'] ?? 0, 2));
+$balance = htmlspecialchars(number_format($operator['balance'] ?? 0, 2, ',', '.'));
+
+$defaultAvatar = '/images/default-avatar.png';
+$selfieUrl = htmlspecialchars($operator['path_selfie'] ?? $defaultAvatar);
+$thumbUrl = htmlspecialchars($operator['path_selfie_thumb'] ?? $selfieUrl);
+
+$email = htmlspecialchars($operator['email'] ?? 'Não informado');
+$phone = htmlspecialchars($operator['phone'] ?? 'Não informado');
+$cpf = htmlspecialchars($operator['cpf'] ?? 'Não informado');
+$pixKeyType = htmlspecialchars($operator['pix_key_type'] ?? 'PIX');
+$pixKey = htmlspecialchars($operator['pix_key'] ?? 'Não informado');
+
+$addressParts = [
+    htmlspecialchars($operator['endereco'] ?? ''),
+    htmlspecialchars($operator['numero'] ?? 's/n'),
+    htmlspecialchars($operator['bairro'] ?? ''),
+    htmlspecialchars($operator['cidade'] ?? ''),
+    htmlspecialchars($operator['estado'] ?? '')
+];
+$fullAddress = implode(' - ', array_filter($addressParts));
+$fullAddress = empty(trim($fullAddress, ' -')) ? 'Endereço não informado' : $fullAddress;
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -5,7 +37,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil - TURNY</title>
     <link rel="stylesheet" href="/css/style.css">
-	    <style>
+    <style>
         .profile-header { text-align: center; margin-bottom: 30px; }
         .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--cor-branco); box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
         .profile-avatar:hover { transform: scale(1.05); }
@@ -18,139 +50,124 @@
         .qualification-badge { background-color: #e9f2f9; color: var(--cor-primaria); padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border: 1px solid #cce0f1; }
         .qualification-badge .icon { width: 16px; height: 16px; fill: var(--cor-primaria); }
 
-        /* --- INÍCIO DA CORREÇÃO DEFINITIVA DO MODAL --- */
-.modal-container {
-    display: none; /* mantido */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+        /* Estilos do cabeçalho e saldo */
+.operador-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px 15px; 
+    gap: 15px; /* espaçamento entre logo e saldo */
 }
-        .modal-dialog {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            animation: fadeInModal 0.3s ease-out;
-            position: relative;
-        }
-        @keyframes fadeInModal {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .modal-close-btn {
-            position: absolute;
-            top: 5px;
-            right: 15px;
-            background: transparent;
-            border: none;
-            font-size: 35px;
-            cursor: pointer;
-            color: #aaa;
-            line-height: 1;
-        }
-        .modal-close-btn:hover { color: #333; }
 
-        #image-modal-dialog img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            display: block;
-        }
-        #image-modal-dialog #legendaDoModal {
-            text-align: center;
-            color: #666;
-            padding-top: 10px;
-            font-weight: bold;
-        }
-        /* --- FIM DA CORREÇÃO DEFINITIVA DO MODAL --- */
+.saldo-mini { 
+    background: #f8f9fa; 
+    border: 1px solid #e0e0e0; 
+    padding: 6px 12px; 
+    border-radius: 8px; 
+    font-size: 0.95em; 
+    color: var(--cor-sucesso); 
+    font-weight: bold; 
+    text-align: right; /* alinhado à direita */
+    min-width: 90px; /* garante espaço fixo */
+}
+
+.saldo-mini label { 
+    font-size: 0.75em; 
+    color: #666; 
+    display: block; 
+    font-weight: normal; 
+    margin-bottom: 2px; 
+}
+
+		
     </style>
 </head>
 <body class="operador-body">
+
     <div class="operador-container">
         <header class="operador-header">
             <div class="logo">Turn<span>y</span></div>
+
+            <div class="saldo-mini">
+                <label><center>Saldo</center></label>
+                R$ <?= $balance ?>
+            </div>
+
             <div class="user-info"><a href="/logout">Sair</a></div>
         </header>
 
         <main class="operador-content">
             <?php display_flash_message(); ?>
 
-            <div class="profile-header">
-                <img src="<?= htmlspecialchars($operator['path_selfie_thumb'] ?? $operator['path_selfie']) ?>" 
-                     alt="Foto de Perfil de <?= htmlspecialchars($operator['name']) ?>" 
-                     class="profile-avatar imagem-clicavel"
-                     data-full-image="<?= htmlspecialchars($operator['path_selfie']) ?>">
-                
-                <h2 class="profile-name"><?= htmlspecialchars($operator['name']) ?></h2>
-                <p>@<?= htmlspecialchars($operator['username']) ?></p>
-                <p style="margin-top: -10px;">Pontuação: <strong><?= htmlspecialchars(number_format($operator['pontuacao'], 2)) ?> / 5.00</strong></p>
-            </div>
-
-            <div class="profile-section">
-                <h3>Minhas Qualificações</h3>
-                
-
-
-                <!-- Secção para Sistemas ERP -->
-                <h4 style="margin-top: 20px; font-size: 1em; color: #555;">Sistemas (ERP)</h4>
-                <div class="qualifications-grid">
-                    <?php if (empty($erpQualifications)): ?>
-                        <p>Nenhuma qualificação de sistema. <a href="/painel/operador/qualificacoes">Solicite uma aqui</a>.</p>
-                    <?php else: ?>
-                        <?php foreach ($erpQualifications as $qual): ?>
-                            <span class="qualification-badge">
-                                <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"></path></svg></span>
-                                <?= htmlspecialchars($qual) ?>
-                            </span>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+            <?php if (!empty($operator)): ?>
+                <div class="profile-header">
+                    <img src="<?= $thumbUrl ?>" alt="Foto de Perfil de <?= $name ?>" class="profile-avatar imagem-clicavel" data-full-image="<?= $selfieUrl ?>">
+                    <h2 class="profile-name"><?= $name ?></h2>
+                    <p>@<?= $username ?></p>
+                    <p style="margin-top: -10px;">Pontuação: <strong><?= $score ?> / 5.00</strong></p>
                 </div>
-                <p style="text-align: center; margin-top: 15px;"><a href="/painel/operador/qualificacoes">Gerir ou solicitar novas qualificações.</a></p>
-            </div>
-            
-            <div class="profile-section">
-                <h3>Meus Dados</h3>
-                <div class="data-item"><label>E-mail:</label> <?= htmlspecialchars($operator['email']) ?></div>
-                <div class="data-item"><label>Telefone:</label> <?= htmlspecialchars($operator['phone']) ?></div>
-                <div class="data-item"><label>CPF:</label> <?= htmlspecialchars($operator['cpf']) ?></div>
-                <div class="data-item"><label>Endereço:</label> <?= htmlspecialchars($operator['endereco'] ?? '') ?>, <?= htmlspecialchars($operator['numero'] ?? 's/n') ?> - <?= htmlspecialchars($operator['bairro'] ?? '') ?>, <?= htmlspecialchars($operator['cidade'] ?? '') ?>/<?= htmlspecialchars($operator['estado'] ?? '') ?></div>
-                <div class="data-item"><label>PIX (<?= htmlspecialchars($operator['pix_key_type']) ?>):</label> <?= htmlspecialchars($operator['pix_key']) ?></div>
-            </div>
+
+                <div class="profile-section">
+                    <h3>Minhas Qualificações</h3>
+                    <h4 style="margin-top: 20px; font-size: 1em; color: #555;">Sistemas (ERP)</h4>
+                    <div class="qualifications-grid">
+                        <?php if (empty($erpQualifications)): ?>
+                            <p>Nenhuma qualificação de sistema. <a href="/painel/operador/qualificacoes">Solicite uma aqui</a>.</p>
+                        <?php else: ?>
+                            <?php foreach ($erpQualifications as $qual): ?>
+                                <span class="qualification-badge">
+                                    <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"></path></svg></span>
+                                    <?= htmlspecialchars($qual) ?>
+                                </span>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px;"><a href="/painel/operador/qualificacoes">Gerir ou solicitar novas qualificações.</a></p>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Meus Dados</h3>
+                    <div class="data-item"><label>E-mail:</label> <?= $email ?></div>
+                    <div class="data-item"><label>Telefone:</label> <?= $phone ?></div>
+                    <div class="data-item"><label>CPF:</label> <?= $cpf ?></div>
+                    <div class="data-item"><label>Endereço:</label> <?= $fullAddress ?></div>
+                    <div class="data-item"><label>PIX (<?= $pixKeyType ?>):</label> <?= $pixKey ?></div>
+                </div>
+            <?php else: ?>
+                <div class="info-box error" style="text-align: center;">
+                    <p><strong>Erro ao carregar o perfil.</strong></p>
+                    <p>Não foi possível encontrar os dados do operador. Por favor, tente novamente mais tarde.</p>
+                </div>
+            <?php endif; ?>
         </main>
 
-        <footer class="operador-footer">
-            <a href="/painel/operador" class="footer-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
-                Vagas
-            </a>
-            <a href="/painel/operador/meus-turnos" class="footer-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" /></svg>
-                Meus Turnos
-            </a>
-            <a href="/painel/operador/ofertas" class="footer-icon" style="position: relative;">
-                 <?php if (isset($pendingOffers) && $pendingOffers > 0): ?>
-                     <span class="notification-badge"><?= htmlspecialchars($pendingOffers) ?></span>
-                 <?php endif; ?>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 17H20V12H4V17H2V12C2 10.9 2.9 10 4 10H20C21.1 10 22 10.9 22 12V17M15.5 2H8.5L7.3 5H16.7L15.5 2M18 5H6L5 7V9H19V7L18 5M12 13C13.1 13 14 13.9 14 15S13.1 17 12 17 10 16.1 10 15 10.9 13 12 13Z" /></svg>
-                Ofertas
-            </a>
-            <a href="/painel/operador/perfil" class="footer-icon active">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
-                Perfil
-            </a>
-        </footer>
+<footer class="operador-footer">
+    <a href="/painel/operador" class="footer-icon <?= ($activePage === 'vagas') ? 'active' : '' ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+        <span>Vagas</span>
+    </a>
+    <a href="/painel/operador/meus-turnos" class="footer-icon <?= ($activePage === 'turnos') ? 'active' : '' ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" /></svg>
+        <span>Meus Turnos</span>
+    </a>
+    <a href="/painel/operador/ofertas" class="footer-icon <?= ($activePage === 'ofertas') ? 'active' : '' ?>" style="position: relative;">
+        <?php if (($pendingOffers ?? 0) > 0): ?>
+            <span class="notification-badge"><?= htmlspecialchars($pendingOffers) ?></span>
+        <?php endif; ?>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 17H20V12H4V17H2V12C2 10.9 2.9 10 4 10H20C21.1 10 22 10.9 22 12V17M15.5 2H8.5L7.3 5H16.7L15.5 2M18 5H6L5 7V9H19V7L18 5M12 13C13.1 13 14 13.9 14 15S13.1 17 12 17 10 16.1 10 15 10.9 13 12 13Z" /></svg>
+        <span>Ofertas</span>
+    </a>
+    <a href="/painel/operador/carteira" class="footer-icon <?= ($activePage === 'carteira') ? 'active' : '' ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21,18V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V6H12A2,2 0 0,0 10,8V16A2,2 0 0,0 12,18H21M12,16H22V8H12V16M16,13.5A1.5,1.5 0 0,1 14.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,12A1.5,1.5 0 0,1 16,13.5Z" /></svg>
+        <span>TURNYPay</span>
+    </a>
+    <a href="/painel/operador/perfil" class="footer-icon <?= ($activePage === 'perfil') ? 'active' : '' ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+        <span>Perfil</span>
+    </a>
+</footer>
     </div>
 
-    <!-- Estrutura do Modal de Imagem -->
     <div id="image-modal-container" class="modal-container">
         <div class="modal-dialog" id="image-modal-dialog">
             <button class="modal-close-btn" id="close-image-modal">&times;</button>
@@ -171,7 +188,7 @@
             imagensClicaveis.forEach(img => {
                 img.addEventListener('click', function() {
                     const fullImageSrc = this.dataset.fullImage || this.src;
-                    imageModalContainer.style.display = "flex"; // Usa flex para mostrar e centralizar
+                    imageModalContainer.style.display = "flex";
                     modalImg.src = fullImageSrc;
                     legenda.textContent = this.alt || '';
                 });
@@ -181,7 +198,10 @@
                 imageModalContainer.style.display = "none";
             }
 
-            fecharImg.addEventListener('click', closeImageModal);
+            if (fecharImg) {
+                fecharImg.addEventListener('click', closeImageModal);
+            }
+            
             imageModalContainer.addEventListener('click', (e) => {
                 if (e.target === imageModalContainer) {
                     closeImageModal();

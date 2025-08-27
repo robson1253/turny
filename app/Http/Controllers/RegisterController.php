@@ -110,40 +110,46 @@ class RegisterController extends BaseController
             }
         }
         
-        // 4. Inserção na Base de Dados
-        try {
-            $pdo = Connection::getPdo();
-            
-            // Verifica se os dados já existem e, se sim, redireciona com uma mensagem amigável.
-            $stmtCheck = $pdo->prepare("SELECT id FROM operators WHERE username = ? OR email = ? OR cpf = ?");
-            $stmtCheck->execute([$username, $email, $cpf]);
-            if ($stmtCheck->fetch()) {
-                // Usa a nossa função flash para criar uma mensagem de erro amigável
-                flash('O @username, E-mail ou CPF fornecido já está registado na plataforma. Por favor, tente outros dados ou faça login se já tiver uma conta.', 'error');
-                // Redireciona o utilizador de volta para o formulário de registo
-                header('Location: /registro/operador');
-                exit();
-            }
+    // 4. Inserção na Base de Dados (com transação)
+    $pdo = Connection::getPdo(); // Mova a conexão para o topo do bloco
+    try {
+        $pdo->beginTransaction(); // Inicia a transação
+        
+        // Verifica se os dados já existem
+        $stmtCheck = $pdo->prepare("SELECT id FROM operators WHERE username = ? OR email = ? OR cpf = ?");
+        $stmtCheck->execute([$username, $email, $cpf]);
+        if ($stmtCheck->fetch()) {
+            $pdo->rollBack(); // Cancela a transação
+            flash('O @username, E-mail ou CPF fornecido já está registado na plataforma.', 'error');
+            header('Location: /registro/operador');
+            exit();
+        }
 
-            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-            $sql = "INSERT INTO operators 
-                        (name, username, cpf, phone, email, password, cep, endereco, numero, bairro, cidade, estado, 
-                         pix_key_type, pix_key, 
-                         path_documento_frente, path_documento_verso, path_selfie, path_selfie_thumb,
-                         status) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente_verificacao')";
-            
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                $name, $username, $cpf, $phone, $email, $passwordHash,
-                $cep, $endereco, $numero, $bairro, $cidade, $estado,
-                $pix_key_type, $pix_key,
-                $uploadedFilePaths['doc_frente'] ?? null,
-                $uploadedFilePaths['doc_verso'] ?? null,
-                $uploadedFilePaths['selfie'] ?? null,
-                $uploadedFilePaths['selfie_thumb'] ?? null // Salva o novo caminho do thumbnail
-            ]);
+        $sql = "INSERT INTO operators 
+                    (name, username, cpf, phone, email, password, cep, endereco, numero, bairro, cidade, estado, 
+                     pix_key_type, pix_key, 
+                     path_documento_frente, path_documento_verso, path_selfie, path_selfie_thumb,
+                     status) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente_verificacao')";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            $name, $username, $cpf, $phone, $email, $passwordHash,
+            $cep, $endereco, $numero, $bairro, $cidade, $estado,
+            $pix_key_type, $pix_key,
+            $uploadedFilePaths['doc_frente'] ?? null,
+            $uploadedFilePaths['doc_verso'] ?? null,
+            $uploadedFilePaths['selfie'] ?? null,
+            $uploadedFilePaths['selfie_thumb'] ?? null
+        ]);
+
+        // --- NOVA LÓGICA: CRIAR A CARTEIRA ---
+        $newOperatorId = $pdo->lastInsertId();
+        $stmtWallet = $pdo->prepare("INSERT INTO operator_wallets (operator_id) VALUES (?)");
+        $stmtWallet->execute([$newOperatorId]);
+        // --- FIM DA NOVA LÓGICA ---
 
             // 5. Envio de E-mail e Redirecionamento
             $emailSubject = "Bem-vindo à TURNY! O seu registo foi recebido.";
