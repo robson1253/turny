@@ -1,0 +1,596 @@
+ [2025-08-01 23:08:15] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'company_cost' in 'field list' in C:\xampp\turny_project\app\Http\Controllers\PainelAdminEmpresaController.php on line 38
+[2025-08-01 23:09:14] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PainelAdminEmpresaController.php on line 3
+[2025-08-02 00:06:35] syntax error, unexpected token ")" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 256
+[2025-08-02 00:06:45] syntax error, unexpected token ")" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 256
+[2025-08-02 00:12:49] syntax error, unexpected token "try", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 317
+[2025-08-02 00:25:48] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\SettingsController.php on line 3
+[2025-08-02 12:20:06] SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`turny_db`.`shifts`, CONSTRAINT `fk_shifts_store_id` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`) ON DELETE CASCADE) in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 299
+[2025-08-02 23:01:44] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 817
+[2025-08-02 23:11:11] SQLSTATE[42S22]: Column not found: 1054 Unknown column 't.job_function_id' in 'on clause' in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 527
+[2025-08-02 23:43:55] syntax error, unexpected token "\", expecting "]" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 25
+[2025-08-02 23:44:33] syntax error, unexpected identifier "truncated", expecting ")" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 309
+[2025-08-02 23:50:51] syntax error, unexpected identifier "no", expecting ")" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 322
+[2025-08-03 00:28:16] syntax error, unexpected token "\" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 307
+[2025-08-03 00:29:34] syntax error, unexpected token "\" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 307
+[2025-08-03 00:29:35] syntax error, unexpected token "\" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 307
+[2025-08-03 00:30:34] syntax error, unexpected token "\" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 307
+[2025-08-03 01:09:19] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 647
+[2025-08-03 01:11:12] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 605
+[2025-08-03 01:13:42] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 605
+[2025-08-03 01:14:23] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 605
+[2025-08-03 01:14:25] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 605
+[2025-08-03 01:21:58] syntax error, unexpected token "`", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 150
+[2025-08-03 01:22:15] syntax error, unexpected token "`", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 150
+[2025-08-03 01:22:16] syntax error, unexpected token "`", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 150
+[2025-08-03 01:23:30] syntax error, unexpected identifier "Depois", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 152
+[2025-08-03 01:29:16] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 767
+[2025-08-03 03:56:37] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 767
+[2025-08-03 03:58:47] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 747
+[2025-08-03 03:58:59] Unclosed '{' on line 656 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 747
+[2025-08-03 03:59:20] SQLSTATE[HY093]: Invalid parameter number: parameter was not defined in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 690
+[2025-08-03 04:01:31] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 775
+[2025-08-03 04:01:47] SQLSTATE[HY093]: Invalid parameter number: parameter was not defined in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 693
+[2025-08-03 04:13:28] syntax error, unexpected token "<", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 328
+[2025-08-03 04:25:38] Call to undefined method App\Http\Controllers\PainelEmpresaController::showPlanner() in C:\xampp\turny_project\public\index.php on line 260
+[2025-08-03 04:25:42] Call to undefined method App\Http\Controllers\PainelEmpresaController::showPlanner() in C:\xampp\turny_project\public\index.php on line 260
+[2025-08-03 04:30:40] Unterminated comment starting line 652 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 652
+[2025-08-03 04:30:42] Unterminated comment starting line 652 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 652
+[2025-08-03 04:30:57] Unterminated comment starting line 652 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 652
+[2025-08-03 04:31:41] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 784
+[2025-08-03 04:31:42] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 784
+[2025-08-03 04:31:53] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 653
+[2025-08-03 04:34:29] Call to undefined method App\Http\Controllers\PainelEmpresaController::getCompanyId() in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 663
+[2025-08-03 04:37:41] Call to undefined method App\Http\Controllers\PainelEmpresaController::getCompanyId() in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 672
+[2025-08-03 04:37:57] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 653
+[2025-08-03 04:40:42] syntax error, unexpected token "class", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 670
+[2025-08-03 04:40:56] syntax error, unexpected token "class", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 670
+[2025-08-03 04:49:29] Unclosed '{' on line 19 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 617
+[2025-08-03 05:25:54] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 246
+[2025-08-03 05:35:17] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'shift_id' cannot be null in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 335
+[2025-08-03 22:38:14] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 247
+[2025-08-03 22:48:22] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'shift_id' cannot be null in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 368
+[2025-08-03 23:01:59] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'shift_id' cannot be null in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 368
+[2025-08-03 23:16:47] Operador não encontrado. in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 347
+[2025-08-03 23:25:04] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'shift_id' cannot be null in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 380
+[2025-08-03 23:26:23] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'shift_id' cannot be null in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 380
+[2025-08-03 23:44:13] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'shift_id' cannot be null in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 380
+[2025-08-03 23:49:33] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'shift_id' cannot be null in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 358
+[2025-08-04 01:33:16] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:33:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:33:23] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:33:27] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:35:07] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:35:09] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:35:17] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:43:29] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:44:33] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:44:45] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:46:11] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:51:34] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:57:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:57:34] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:58:10] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:58:16] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:58:20] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:58:27] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:58:28] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:58:32] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:58:34] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 01:58:44] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:00:58] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:01:00] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:01:34] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:05:10] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:05:11] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:05:14] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:05:21] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:05:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:06:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:07:51] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:09:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:10:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:10:33] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:10:45] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:11:43] syntax error, unexpected token "endif", expecting end of file in C:\xampp\turny_project\app\Views\operador\perfil.php on line 109
+[2025-08-04 02:20:31] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:20:34] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:27:02] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:27:07] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:27:32] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:27:35] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:31:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:32:56] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:14] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:16] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:20] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:20] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:22] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:22] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:27] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:31] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:33:36] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:35:58] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:36:00] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:39:01] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:39:01] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:41:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:41:42] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:42:53] O @username, E-mail ou CPF fornecido já está registado na plataforma. in C:\xampp\turny_project\app\Http\Controllers\RegisterController.php on line 120
+[2025-08-04 02:42:53] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:47:35] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:47:51] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:49:45] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:52:50] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:52:56] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:53:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 02:53:48] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:00:06] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:00:07] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:00:08] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:00:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:00:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:00:23] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:00:29] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:00:46] Call to undefined method App\Http\Controllers\PainelEmpresaController::criarLoteSemanal() in C:\xampp\turny_project\public\index.php on line 256
+[2025-08-04 03:00:46] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:02:36] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:02:38] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:02:39] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:02:48] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:02:51] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:02:54] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:02:56] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:02:58] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:03:00] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:03:02] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:03:06] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:03:17] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:03:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:05:32] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:26:38] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:26:52] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:26:55] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:28:04] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:28:05] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:28:12] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 03:28:15] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:02:00] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:02:01] Call to undefined method App\Http\Controllers\EmpresaController::checkAccess() in C:\xampp\turny_project\app\Http\Controllers\EmpresaController.php on line 18
+[2025-08-04 04:02:01] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:04:38] syntax error, unexpected token "`" in C:\xampp\turny_project\app\Http\Controllers\BaseController.php on line 53
+[2025-08-04 04:04:38] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:08:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:08:21] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:08:28] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:08:30] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:08:33] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:09:21] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:09:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:09:25] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:09:27] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:09:29] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:09] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:10] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:12] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:14] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:16] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:22] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:28] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:32] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:37] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:39] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-04 04:10:42] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+<<<<<<< HEAD
+[2025-08-08 01:25:17] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:25:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:26:38] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:28:04] syntax error, unexpected token "(", expecting ";" or "{" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 25
+[2025-08-08 01:28:04] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:28:21] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:28:32] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:28:43] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:28:46] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:28:57] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:28:59] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:00] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:02] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:02] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:04] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:04] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:04] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:05] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:06] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:08] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:10] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:17] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-08 01:29:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+=======
+>>>>>>> 9dd6b9090c760ad464f921722d847ee8ecc30020
+[2025-08-16 20:16:43] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:16:45] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:18:44] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:18:45] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:18:49] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:18:50] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:19:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:19:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:19:14] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:19:14] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:19:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:20:15] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:20:21] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:20:54] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:22:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:25:41] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:26:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:27:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:30:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:53:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 325
+[2025-08-16 20:59:16] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 20:59:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 20:59:24] syntax error, unexpected token "<<", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 25
+[2025-08-16 20:59:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:00:50] syntax error, unexpected token "<", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 25
+[2025-08-16 21:00:50] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:00:57] syntax error, unexpected identifier "HEAD", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 25
+[2025-08-16 21:00:57] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:01:06] syntax error, unexpected token "===", expecting ";" or "{" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 27
+[2025-08-16 21:01:06] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:01:37] syntax error, unexpected token "private", expecting ";" or "{" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 28
+[2025-08-16 21:01:37] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:01:56] syntax error, unexpected token "<<", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 25
+[2025-08-16 21:01:56] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:02:12] syntax error, unexpected token "<<", expecting "function" or "const" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 25
+[2025-08-16 21:02:12] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:02:52] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:02:58] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:03:17] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:03:29] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:06:08] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:06:41] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:07:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:17:39] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:17:40] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:17:41] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:17:43] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:17:46] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:19:30] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:19:34] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:19:39] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:22:17] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:22:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:22:28] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:22:30] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:22:31] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:22:33] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 21:22:35] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:05] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:07] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:10] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:11] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:12] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:14] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:34] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:38] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:43] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:44] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:45] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:03:48] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:05:26] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:06:00] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:06:02] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:09:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:09:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:09:28] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:09:30] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:16:15] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:16:46] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:16:47] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:16:48] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:16:53] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:16:54] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:17:16] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:18:05] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:19:10] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:19:11] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:19:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:20:01] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:20:02] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:23:39] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:24:17] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:25:12] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:32:05] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:33:09] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:33:10] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:33:35] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:33:42] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:33:44] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:33:48] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:33:50] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:38:30] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:38:33] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:38:35] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:38:37] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:45:04] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:45:07] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:45:10] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:45:11] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:45:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:02] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:04] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:07] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:09] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:36] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:37] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:37] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:40] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:41] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:46:43] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:47:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:47:04] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:47:06] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 22:48:20] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:30:18] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:30:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:30:23] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:49:43] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:49:44] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:49:48] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:49:52] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:49:54] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:49:57] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:50:30] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:54:20] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:54:25] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:55:33] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:55:43] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-16 23:55:49] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:07:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:07:23] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:07:29] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:07:34] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:07:39] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:07:40] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:11:01] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:14:12] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:14:38] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:14:42] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:19:55] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:19:57] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:20:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:22:11] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:22:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:22:35] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-17 00:24:16] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:01:08] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:01:09] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:01:14] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:03:06] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:03:48] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:03:51] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:03:55] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:05:56] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:19:51] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:20:01] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:20:01] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:20:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:20:11] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:21:37] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:21:38] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:21:38] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 327
+[2025-08-18 00:22:18] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 215
+[2025-08-18 00:22:19] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:23:23] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 215
+[2025-08-18 00:23:23] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:23:24] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 215
+[2025-08-18 00:23:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:25:00] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 215
+[2025-08-18 00:25:00] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:25:01] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 215
+[2025-08-18 00:25:01] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:25:02] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:25:03] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 215
+[2025-08-18 00:25:03] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:26:15] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 334
+[2025-08-18 00:26:15] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 334
+[2025-08-18 00:29:09] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:29:14] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:29:15] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-18 00:30:13] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 17:43:00] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:16:59] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:17:01] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:17:05] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:17:09] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:17:12] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:17:12] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:19:20] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:19:20] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:19:22] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:19:23] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:19:24] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:19:27] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:19:27] Failed opening required 'C:\xampp\turny_project\public/../app/Views/errors/404.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\public\index.php on line 332
+[2025-08-23 21:22:00] Class "App\Http\Controllers\CompanyOperatorController" not found in C:\xampp\turny_project\public\index.php on line 220
+[2025-08-23 22:12:13] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 112
+[2025-08-23 22:12:16] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 112
+[2025-08-23 22:12:51] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 112
+[2025-08-23 22:15:16] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 112
+[2025-08-23 22:17:32] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 112
+[2025-08-23 22:17:37] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 112
+[2025-08-23 22:17:43] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 112
+[2025-08-23 22:18:54] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 112
+[2025-08-23 22:24:22] Call to undefined function App\Http\Controllers\is_ajax_request() in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 52
+[2025-08-23 22:24:27] Call to undefined function App\Http\Controllers\is_ajax_request() in C:\xampp\turny_project\app\Http\Controllers\CompanyOperatorController.php on line 98
+[2025-08-23 23:29:04] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 355
+[2025-08-23 23:29:07] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 355
+[2025-08-23 23:29:08] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 355
+[2025-08-23 23:31:19] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 355
+[2025-08-23 23:31:37] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 358
+[2025-08-23 23:31:38] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 358
+[2025-08-23 23:32:01] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 358
+[2025-08-23 23:32:02] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 358
+[2025-08-23 23:32:03] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 358
+[2025-08-23 23:33:14] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 358
+[2025-08-23 23:33:15] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 358
+[2025-08-23 23:33:50] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 358
+[2025-08-23 23:33:50] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 358
+[2025-08-23 23:51:25] Vaga não encontrada ou acesso não permitido. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 126
+[2025-08-23 23:51:29] Vaga não encontrada ou acesso não permitido. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 126
+[2025-08-23 23:51:30] Vaga não encontrada ou acesso não permitido. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 126
+[2025-08-23 23:52:46] SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '1' for key 'unique_rating' in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 449
+[2025-08-23 23:57:05] Vaga não encontrada ou acesso não permitido. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 126
+[2025-08-23 23:57:29] Turno não encontrado ou acesso não permitido. in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 502
+[2025-08-24 00:01:33] Vaga não encontrada ou acesso não permitido. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 126
+[2025-08-24 00:01:34] Vaga não encontrada ou acesso não permitido. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 126
+[2025-08-24 21:20:44] syntax error, unexpected token "public" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 641
+[2025-08-24 21:21:52] syntax error, unexpected token "public" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 639
+[2025-08-24 21:22:05] syntax error, unexpected token "public" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 638
+[2025-08-24 21:22:06] syntax error, unexpected token "public" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 638
+[2025-08-24 21:22:06] syntax error, unexpected token "public" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 638
+[2025-08-24 21:23:23] Call to undefined method Endroid\QrCode\Builder\Builder::create() in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 48
+[2025-08-24 21:24:38] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 3
+[2025-08-24 21:28:30] Call to undefined method Endroid\QrCode\Builder\Builder::create() in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 48
+[2025-08-24 21:29:39] Unmatched '}' in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 692
+[2025-08-24 21:29:56] Call to undefined method Endroid\QrCode\Builder\Builder::create() in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 48
+[2025-08-24 21:36:55] Call to undefined method Endroid\QrCode\Builder\Builder::create() in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 48
+[2025-08-24 21:40:00] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 22:55:56] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 22:56:47] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 22:58:22] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:00:06] Call to undefined method Endroid\QrCode\Builder\Builder::create() in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 44
+[2025-08-24 23:02:06] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:02:27] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:02:38] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:15:20] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:15:22] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:17:23] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:20:06] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:22:19] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:23:33] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-24 23:47:06] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-24 23:50:34] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 53
+[2025-08-24 23:50:54] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 53
+[2025-08-24 23:53:32] syntax error, unexpected token "-", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 3
+[2025-08-25 00:19:39] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 555
+[2025-08-25 00:21:26] Unclosed '{' on line 14 in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 594
+[2025-08-25 00:21:46] syntax error, unexpected token "protected", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 18
+[2025-08-25 00:21:54] syntax error, unexpected token "protected", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 18
+[2025-08-25 00:21:55] syntax error, unexpected token "protected", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 18
+[2025-08-25 00:21:55] syntax error, unexpected token "protected", expecting "{" in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 18
+[2025-08-25 00:22:23] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 107
+[2025-08-25 00:23:02] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 107
+[2025-08-25 00:29:03] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-25 00:37:15] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 40
+[2025-08-25 00:42:15] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 45
+[2025-08-25 00:45:00] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 44
+[2025-08-25 00:50:15] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 47
+[2025-08-25 00:54:22] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 50
+[2025-08-25 00:55:44] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 50
+[2025-08-25 00:56:24] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 56
+[2025-08-25 00:56:35] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 47
+[2025-08-25 00:57:39] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 45
+[2025-08-25 01:02:20] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 49
+[2025-08-25 01:02:21] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 49
+[2025-08-25 01:03:17] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 186
+[2025-08-25 01:04:54] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 45
+[2025-08-25 01:07:33] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 62
+[2025-08-25 01:27:25] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 345
+[2025-08-25 01:29:47] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_header.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 24
+[2025-08-25 01:32:46] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 47
+[2025-08-25 01:32:51] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 47
+[2025-08-25 01:37:37] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\pagar.php on line 32
+[2025-08-25 01:40:10] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\pagar.php on line 32
+[2025-08-25 03:47:44] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-25 03:47:52] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-25 11:57:33] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'turny_db.operator_wallets' doesn't exist in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 338
+[2025-08-25 11:59:22] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'turny_db.operator_wallets' doesn't exist in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 338
+[2025-08-25 13:02:00] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-25 13:38:00] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'turny_db.operator_wallets' doesn't exist in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 338
+[2025-08-26 22:33:36] Unclosed '{' on line 11 in C:\xampp\turny_project\app\Http\Controllers\SettingsController.php on line 91
+[2025-08-26 22:33:39] Unclosed '{' on line 11 in C:\xampp\turny_project\app\Http\Controllers\SettingsController.php on line 91
+[2025-08-26 22:33:43] Unclosed '{' on line 11 in C:\xampp\turny_project\app\Http\Controllers\SettingsController.php on line 91
+[2025-08-26 22:33:57] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'max_hours' in 'field list' in C:\xampp\turny_project\app\Http\Controllers\SettingsController.php on line 76
+[2025-08-27 00:17:32] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 368
+[2025-08-27 00:19:28] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 368
+[2025-08-27 00:22:49] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 368
+[2025-08-27 00:26:03] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 368
+[2025-08-27 00:29:22] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 368
+[2025-08-27 00:30:49] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 368
+[2025-08-27 00:34:11] Class "App\Http" not found in C:\xampp\turny_project\public\index.php on line 368
+[2025-08-27 00:49:40] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 571
+[2025-08-27 00:50:18] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 571
+[2025-08-27 00:53:56] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 571
+[2025-08-27 00:53:57] syntax error, unexpected token "public", expecting end of file in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 571
+[2025-08-27 16:38:08] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 163
+[2025-08-27 16:40:39] Failed opening required 'C:\xampp\turny_project\app\Http\Controllers/../../Views/operador/pagamento_sucesso.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Http\Controllers\BaseController.php on line 24
+[2025-08-27 16:45:51] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 163
+[2025-08-27 16:55:31] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 163
+[2025-08-27 18:36:47] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 163
+[2025-08-27 19:26:28] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 163
+[2025-08-27 21:21:52] Unclosed '{' on line 10 in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 232
+[2025-08-27 22:56:21] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-27 23:13:22] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 133
+[2025-08-27 23:13:26] Failed opening required 'C:\xampp\turny_project\app\Http\Controllers/../../Views/operador/cobrar.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Http\Controllers\BaseController.php on line 24
+[2025-08-27 23:13:52] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 133
+[2025-08-27 23:14:47] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 171
+[2025-08-27 23:15:00] Failed opening required 'C:\xampp\turny_project\app\Http\Controllers/../../Views/operador/cobrar.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Http\Controllers\BaseController.php on line 24
+[2025-08-27 23:31:49] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 68
+[2025-08-27 23:31:57] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 68
+[2025-08-27 23:56:28] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\carteira.php on line 131
+[2025-08-27 23:59:51] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-28 00:02:13] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 68
+[2025-08-28 00:02:18] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 68
+[2025-08-28 00:02:29] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 68
+[2025-08-28 00:02:35] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 68
+[2025-08-28 00:02:45] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 68
+[2025-08-28 00:02:52] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-28 00:06:06] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 68
+[2025-08-28 00:31:22] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 124
+[2025-08-28 00:31:27] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 124
+[2025-08-28 00:52:55] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 69
+[2025-08-28 01:05:03] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 38
+[2025-08-28 01:05:11] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 38
+[2025-08-28 01:05:14] Failed opening required 'C:\xampp\turny_project\app\Views\operador/../partials/operador_footer.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Views\operador\qrcode.php on line 38
+[2025-08-28 01:12:07] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-28 01:12:13] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-28 01:12:30] Unmatched '}' in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 799
+[2025-08-28 01:12:41] Unclosed '{' on line 16 in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 801
+[2025-08-28 01:12:50] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-28 01:12:54] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-28 01:12:55] Acesso negado ou sessão inválida. in C:\xampp\turny_project\app\Http\Controllers\PainelEmpresaController.php on line 23
+[2025-08-28 01:35:12] syntax error, unexpected token "public" in C:\xampp\turny_project\app\Http\Controllers\PaymentController.php on line 108
+[2025-08-28 01:48:04] Call to undefined method App\Http\Controllers\PaymentController::processOperatorToOperatorPayment() in C:\xampp\turny_project\public\index.php on line 186
+[2025-08-28 01:53:38] Call to undefined method App\Http\Controllers\PaymentController::processOperatorToOperatorPayment() in C:\xampp\turny_project\public\index.php on line 186
+[2025-08-28 01:58:48] Call to undefined method App\Http\Controllers\PaymentController::processOperatorToOperatorPayment() in C:\xampp\turny_project\public\index.php on line 186
+[2025-08-28 12:21:19] Call to undefined method App\Http\Controllers\PaymentController::processOperatorToOperatorPayment() in C:\xampp\turny_project\public\index.php on line 186
+[2025-08-28 12:21:23] Call to undefined method App\Http\Controllers\PaymentController::processOperatorToOperatorPayment() in C:\xampp\turny_project\public\index.php on line 186
+[2025-08-28 12:21:33] Call to undefined method App\Http\Controllers\PaymentController::processOperatorToOperatorPayment() in C:\xampp\turny_project\public\index.php on line 186
+[2025-08-28 12:34:06] Call to undefined method App\Http\Controllers\PaymentController::processOperatorToOperatorPayment() in C:\xampp\turny_project\public\index.php on line 343
+[2025-08-28 22:05:58] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 323
+[2025-08-28 22:10:52] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 323
+[2025-09-01 00:47:05] Failed opening required 'C:\xampp\turny_project\app\Http\Controllers/../../Views/operador/transferir.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Http\Controllers\BaseController.php on line 24
+[2025-09-01 00:49:25] Failed opening required 'C:\xampp\turny_project\app\Http\Controllers/../../Views/operador/transferir.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\turny_project\app\Http\Controllers\BaseController.php on line 24
+[2025-09-01 00:50:20] Unclosed '{' on line 15 in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 720
+[2025-09-01 00:50:30] Unmatched '}' in C:\xampp\turny_project\app\Http\Controllers\PainelOperadorController.php on line 718
+[2025-09-01 01:23:01] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 323
+[2025-09-01 01:24:17] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 323
+[2025-09-01 01:25:51] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 323
+[2025-09-01 01:29:48] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 327
+[2025-09-01 01:30:08] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 324
+[2025-09-01 01:30:14] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 324
+[2025-09-01 03:14:25] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 334
+[2025-09-01 03:15:10] Call to undefined method App\Http\Controllers\PainelOperadorController::showReceipt() in C:\xampp\turny_project\public\index.php on line 334
